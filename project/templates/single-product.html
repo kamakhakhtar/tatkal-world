@@ -1,0 +1,706 @@
+{% extends 'includes/base.html' %}
+{% block head %}
+<title>Tatkal World | Trusted Software Provider </title>
+<meta name="description" content="A powerful and conceptual webapplication for authenticate irctc mobile verification via otp.">
+
+{% endblock %}
+{% block content%}
+{% csrf_token %}
+<div class="container">
+    <ul class="ps-breadcrumb">
+        <li class="ps-breadcrumb__item"><a href="index.html">Home</a></li>
+        <li class="ps-breadcrumb__item"><a href="/products/">Product</a></li>
+        <li class="ps-breadcrumb__item active" aria-current="page">{{prod.name}}</li>
+    </ul>
+    <div class="ps-page__content">
+        <div class="ps-product--detail ps-product--full">
+            <div class="row">
+                <div class="col-12 col-xl-5">
+                    <div class="ps-product--gallery">
+                        <div class="ps-product__thumbnail">
+                            <div class="slide"><img src="/{{prod.image}}" alt="alt" /></div>
+                            {% for img in prod.images_set.all %}
+                            <div class="slide"><img src="/{{img.image}}" alt="alt" /></div>
+                            {% endfor %}
+                        </div>
+                        <div class="ps-gallery--image">
+                            <div class="slide">
+                                <div class="ps-gallery__item"><img src="/{{prod.image}}" alt="alt" /></div>
+                            </div>
+                            {% for img in prod.images_set.all %}
+                            <div class="slide">
+                                <div class="ps-gallery__item"><img src="/{{img.image}}" alt="alt" /></div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 col-xl-7">
+                    <div class="ps-product__info">
+                        <div class="ps-product__badge"><span class="ps-badge ps-badge--instock"> {{prod.condition}}</span>
+                        </div>
+                        <div class="ps-product__branch"><a href="#">{{prod.category}}</a></div>
+                        <div class="ps-product__title"><a href="#">{{prod.name}}</a></div>
+                       
+                      
+                        <div class="ps-product__meta"><span class="ps-product__price sale">&#8377;{{prod.price}}</span>
+                        </div>
+                        {% if prod.varient_set.all %}
+                        <div class="ps-product__feature-group">
+                            
+                            <div class="ps-product__group">
+                                <h6>Number PNR</h6>
+                                <div class="ps-product__size ps-select--feature"> 
+                                    {% for pnr in prod.varient_set.all %}
+                                    <a href="#" class="variant" data-value="{{pnr.name}}" data-id="{{prod.id}}" title="{{pnr.name}}">{{pnr.name}}</a>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                        {%endif%}
+                        <div class="ps-product__quantity">
+                            <h6>Quantity</h6>
+                            <div class="d-md-flex align-items-center">
+                                <div class="def-number-input number-input safari_only">
+                                    <button class="minus" data-slug="{{prod.slug}}"  onclick="this.parentNode.querySelector('input[type=number]').stepDown()"><i class="icon-minus"></i></button>
+                                    <input class="quantity" min="1" name="quantity" value="1" type="number" />
+                                    <button class="plus" data-slug="{{prod.slug}}" onclick="this.parentNode.querySelector('input[type=number]').stepUp()"><i class="icon-plus"></i></button>
+                                </div><a class="ps-btn ps-btn--warning add-to-cart" data-id="{{prod.id}}">Add to cart</a>
+                            </div>
+                        </div>
+                        
+                        </div>
+                        <div class="ps-product__content">
+                            <ul class="nav nav-tabs ps-tab-list" id="productContentTabs" role="tablist">
+                                <li class="nav-item" role="presentation"><a class="nav-link active" id="description-tab" data-toggle="tab" href="#description-content" role="tab" aria-controls="description-content" aria-selected="true">Description</a></li>
+                                <li class="nav-item" role="presentation"><a class="nav-link" id="specification-tab" data-toggle="tab" href="#specification-content" role="tab" aria-controls="specification-content" aria-selected="false">Specification</a></li>
+                                <li class="nav-item" role="presentation"><a class="nav-link" id="reviews-tab" data-toggle="tab" href="#reviews-content" role="tab" aria-controls="reviews-content" aria-selected="false">Reviews (5)</a></li>
+                            </ul>
+                            <div class="tab-content" id="productContent">
+                                <div class="tab-pane fade show active" id="description-content" role="tabpanel" aria-labelledby="description-tab">
+                                    <p class="ps-desc">{{prod.description}}</p>
+                                    <p class="ps-desc">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry’s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.</p>
+                                </div>
+                                <div class="tab-pane fade" id="specification-content" role="tabpanel" aria-labelledby="specification-tab">
+                                    <table class="table ps-table ps-table--oriented">
+                                        <tbody>
+                                            <tr>
+                                                <th class="ps-table__th">Higher memory bandwidth</th>
+                                                <td>1,544 MHz</td>
+                                            </tr>
+                                            <tr>
+                                                <th class="ps-table__th">Higher pixel rate</th>
+                                                <td>74.1 GPixel/s</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="tab-pane fade" id="reviews-content" role="tabpanel" aria-labelledby="reviews-tab">
+                                    <div class="ps-form--review">
+                                        <div class="ps-form__title">Write a review</div>
+                                        <div class="ps-form__desc">Your email address will not be published. Required fields are marked *</div>
+                                        <form action="do_action" method="post">
+                                            <div class="row">
+                                                <div class="col-12 col-lg-4">
+                                                    <label class="ps-form__label">Your rating *</label>
+                                                    <select class="ps-rating--form" data-value="0">
+                                                        <option value="1">1</option>
+                                                        <option value="2">2</option>
+                                                        <option value="3">3</option>
+                                                        <option value="4">4</option>
+                                                        <option value="5">5</option>
+                                                    </select>
+                                                </div>
+                                                <div class="col-6 col-lg-4">
+                                                    <label class="ps-form__label">Name *</label>
+                                                    <input class="form-control ps-form__input" />
+                                                </div>
+                                                <div class="col-6 col-lg-4">
+                                                    <label class="ps-form__label">Email *</label>
+                                                    <input class="form-control ps-form__input" />
+                                                </div>
+                                                <div class="col-12">
+                                                    <div class="ps-form__block">
+                                                        <label class="ps-form__label">Your review *</label>
+                                                        <textarea class="form-control ps-form__textarea"></textarea>
+                                                    </div>
+                                                </div>
+                                                <div class="col-12 text-center">
+                                                    <button class="btn ps-btn ps-btn--warning">Add Review</button>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                    <div class="ps-product__tabreview">
+                                        <div class="ps-review--product">
+                                            <div class="ps-review__row">
+                                                <div class="ps-review__avatar"><img src="/static/img/avatar/avatar-review.jpg" alt="alt" /></div>
+                                                <div class="ps-review__info">
+                                                    <div class="ps-review__name">Mark J.</div>
+                                                    <div class="ps-review__date">Oct 30, 2021</div>
+                                                </div>
+                                                <div class="ps-review__rating">
+                                                    <select class="ps-rating" data-read-only="true">
+                                                        <option value="1">1</option>
+                                                        <option value="2">2</option>
+                                                        <option value="3">3</option>
+                                                        <option value="4" selected="selected">4</option>
+                                                        <option value="5">5</option>
+                                                    </select>
+                                                </div>
+                                                <div class="ps-review__desc">
+                                                    <p>Everything is perfect. I would recommend!</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="ps-product__type">
+                            <ul class="ps-product__list">
+                                <li> <span class="ps-list__title">Tags: </span>
+                                    {% for tag in i.tag_set.all %}
+                                    <a class="ps-list__text" href="#">{{tag.name}}</a>
+                                    {% endfor %}
+                                </li>
+                                <li> <span class="ps-list__title">SKU: </span><a class="ps-list__text" href="#">SPO2RT</a>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="ps-product__social">
+                            <ul class="ps-social ps-social--color">
+                                <li><a class="ps-social__link facebook" href="#"><i class="fa fa-facebook"> </i><span class="ps-tooltip">Facebook</span></a></li>
+                                <li><a class="ps-social__link twitter" href="#"><i class="fa fa-twitter"></i><span class="ps-tooltip">Twitter</span></a></li>
+                                <li><a class="ps-social__link pinterest" href="#"><i class="fa fa-pinterest-p"></i><span class="ps-tooltip">Pinterest</span></a></li>
+                                <li class="ps-social__linkedin"><a class="ps-social__link linkedin" href="#"><i class="fa fa-linkedin"></i><span class="ps-tooltip">Linkedin</span></a></li>
+                                <li class="ps-social__reddit"><a class="ps-social__link reddit-alien" href="#"><i class="fa fa-reddit-alien"></i><span class="ps-tooltip">Reddit Alien</span></a></li>
+                                <li class="ps-social__email"><a class="ps-social__link envelope" href="#"><i class="fa fa-envelope-o"></i><span class="ps-tooltip">Email</span></a></li>
+                                <li class="ps-social__whatsapp"><a class="ps-social__link whatsapp" href="#"><i class="fa fa-whatsapp"></i><span class="ps-tooltip">WhatsApp</span></a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <section class="ps-bought ps-bought--vertical">
+            <h3 class="ps-bought__title">Frequently bought together</h3>
+            <div class="ps-bought__wapper">
+                <div class="ps-bought__thumbnail">
+                    <ul>
+                        <li><a href="product1.html"><img src="/static/img/products/013.jpg" alt="Hill-Rom TotalCare SpO2rt"></a></li>
+                        <li><a href="product1.html"><img src="/static/img/products/033.jpg" alt="3 Layer Disposable Protective Face Masks"></a></li>
+                        <li><a href="product1.html"><img src="/static/img/products/006.jpg" alt="GAnti-Dust Filter, Breathable, 3 Layers of Purifying"></a></li>
+                    </ul>
+                </div>
+                <div class="ps-bought__content">
+                    <ul class="ps-bought__list">
+                        <li>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="product0" checked="checked">
+                                <label class="form-check-label" for="product0"><span class="ps-bought__name">This Product: Hill-Rom TotalCare SpO2rt </span>– <span class="ps-bought__del">$60.24</span><span class="ps-bought__price sale">$89.74</span>
+                                </label>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="product1" checked="checked">
+                                <label class="form-check-label" for="product1"><span class="ps-bought__name">3 Layer Disposable Protective Face Masks  </span>– <span class="ps-bought__del">$15.52</span><span class="ps-bought__price sale">$14.52</span>
+                                </label>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="product2" checked="checked">
+                                <label class="form-check-label" for="product2"><span class="ps-bought__name">GAnti-Dust Filter, Breathable, 3 Layers of Purifying  </span>– <span class="ps-bought__price">$17.99</span>
+                                </label>
+                            </div>
+                        </li>
+                    </ul>
+                    <div class="ps-bought__submit">
+                        <label>Buy selected for: </label>
+                        <div class="ps-bought__total">$115.31</div><a class="ps-btn ps-btn--warning" href="#">Add all to cart</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section class="ps-section--latest">
+            <h3 class="ps-section__title">Bestsellers</h3>
+            <div class="ps-section__carousel">
+                <div class="owl-carousel" data-owl-auto="false" data-owl-loop="true" data-owl-speed="13000" data-owl-gap="0" data-owl-nav="true" data-owl-dots="true" data-owl-item="5" data-owl-item-xs="2" data-owl-item-sm="2" data-owl-item-md="3" data-owl-item-lg="5" data-owl-item-xl="5" data-owl-duration="1000" data-owl-mousedrag="on">
+                    <div class="ps-section__product">
+                        <div class="ps-product ps-product--standard">
+                            <div class="ps-product__thumbnail"><a class="ps-product__image" href="product1.html">
+                                    <figure><img src="/static/img/products/001.jpg" alt="alt" /><img src="/static/img/products/009.jpg" alt="alt" />
+                                    </figure>
+                                </a>
+                                <div class="ps-product__actions">
+                                    <div class="ps-product__item" data-toggle="tooltip" data-placement="left" title="Wishlist"><a href="#"><i class="fa fa-heart-o"></i></a></div>
+                                    <div class="ps-product__item rotate" data-toggle="tooltip" data-placement="left" title="Add to compare"><a href="#" data-toggle="modal" data-target="#popupCompare"><i class="fa fa-align-left"></i></a></div>
+                                    <div class="ps-product__item" data-toggle="tooltip" data-placement="left" title="Quick view"><a href="#" data-toggle="modal" data-target="#popupQuickview"><i class="fa fa-search"></i></a></div>
+                                    <div class="ps-product__item" data-toggle="tooltip" data-placement="left" title="Add to cart"><a href="#" data-toggle="modal" data-target="#popupAddcart"><i class="fa fa-shopping-basket"></i></a></div>
+                                </div>
+                                <div class="ps-product__badge">
+                                    <div class="ps-badge ps-badge--sold">Sold Out</div>
+                                </div>
+                            </div>
+                            <div class="ps-product__content">
+                                <h5 class="ps-product__title"><a href="product1.html">Digital Thermometer X30-Pro</a></h5>
+                                <div class="ps-product__meta"><span class="ps-product__price sale">$77.65</span><span class="ps-product__del">$80.65</span>
+                                </div>
+                                <div class="ps-product__rating">
+                                    <select class="ps-rating" data-read-only="true">
+                                        <option value="1">1</option>
+                                        <option value="2">2</option>
+                                        <option value="3">3</option>
+                                        <option value="4">4</option>
+                                        <option value="5" selected="selected">5</option>
+                                    </select><span class="ps-product__review">( Reviews)</span>
+                                </div>
+                                <div class="ps-product__desc">
+                                    <ul class="ps-product__list">
+                                        <li>Study history up to 30 days</li>
+                                        <li>Up to 5 users simultaneously</li>
+                                        <li>Has HEALTH certificate</li>
+                                    </ul>
+                                </div>
+                                <div class="ps-product__actions ps-product__group-mobile">
+                                    <div class="ps-product__quantity">
+                                        <div class="def-number-input number-input safari_only">
+                                            <button class="minus" onclick="this.parentNode.querySelector('input[type=number]').stepDown()"><i class="icon-minus"></i></button>
+                                            <input class="quantity" min="0" name="quantity" value="1" type="number" />
+                                            <button class="plus" onclick="this.parentNode.querySelector('input[type=number]').stepUp()"><i class="icon-plus"></i></button>
+                                        </div>
+                                    </div>
+                                    <div class="ps-product__cart"> <a class="ps-btn ps-btn--warning" href="#" data-toggle="modal" data-target="#popupAddcart">Add to cart</a></div>
+                                    <div class="ps-product__item cart" data-toggle="tooltip" data-placement="left" title="Add to cart"><a href="#"><i class="fa fa-shopping-basket"></i></a></div>
+                                    <div class="ps-product__item" data-toggle="tooltip" data-placement="left" title="Wishlist"><a href="wishlist.html"><i class="fa fa-heart-o"></i></a></div>
+                                    <div class="ps-product__item rotate" data-toggle="tooltip" data-placement="left" title="Add to compare"><a href="compare.html"><i class="fa fa-align-left"></i></a></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="ps-section__product">
+                        <div class="ps-product ps-product--standard">
+                            <div class="ps-product__thumbnail"><a class="ps-product__image" href="product1.html">
+                                    <figure><img src="/static/img/products/053.jpg" alt="alt" />
+                                    </figure>
+                                </a>
+                                <div class="ps-product__actions">
+                                    <div class="ps-product__item" data-toggle="tooltip" data-placement="left" title="Wishlist"><a href="#"><i class="fa fa-heart-o"></i></a></div>
+                                    <div class="ps-product__item rotate" data-toggle="tooltip" data-placement="left" title="Add to compare"><a href="#" data-toggle="modal" data-target="#popupCompare"><i class="fa fa-align-left"></i></a></div>
+                                    <div class="ps-product__item" data-toggle="tooltip" data-placement="left" title="Quick view"><a href="#" data-toggle="modal" data-target="#popupQuickview"><i class="fa fa-search"></i></a></div>
+                                    <div class="ps-product__item" data-toggle="tooltip" data-placement="left" title="Add to cart"><a href="#" data-toggle="modal" data-target="#popupAddcart"><i class="fa fa-shopping-basket"></i></a></div>
+                                </div>
+                                <div class="ps-product__badge">
+                                </div>
+                            </div>
+                            <div class="ps-product__content">
+                                <h5 class="ps-product__title"><a href="product1.html">Somersung Sonic X500 Basic</a></h5>
+                                <div class="ps-product__meta"><span class="ps-product__price sale">$38.39</span><span class="ps-product__del">$53.99</span>
+                                </div>
+                                <div class="ps-product__rating">
+                                    <select class="ps-rating" data-read-only="true">
+                                        <option value="1">1</option>
+                                        <option value="2">2</option>
+                                        <option value="3">3</option>
+                                        <option value="4">4</option>
+                                        <option value="5" selected="selected">5</option>
+                                    </select><span class="ps-product__review">( Reviews)</span>
+                                </div>
+                                <div class="ps-product__desc">
+                                    <ul class="ps-product__list">
+                                        <li>Study history up to 30 days</li>
+                                        <li>Up to 5 users simultaneously</li>
+                                        <li>Has HEALTH certificate</li>
+                                    </ul>
+                                </div>
+                                <div class="ps-product__actions ps-product__group-mobile">
+                                    <div class="ps-product__quantity">
+                                        <div class="def-number-input number-input safari_only">
+                                            <button class="minus" onclick="this.parentNode.querySelector('input[type=number]').stepDown()"><i class="icon-minus"></i></button>
+                                            <input class="quantity" min="0" name="quantity" value="1" type="number" />
+                                            <button class="plus" onclick="this.parentNode.querySelector('input[type=number]').stepUp()"><i class="icon-plus"></i></button>
+                                        </div>
+                                    </div>
+                                <a class="ps-btn ps-btn--border add-to-cart" data-id="{{i.id}}" data-value="{{i.slug}}">Add to cart</a>
+
+                                    <div class="ps-product__cart"> <a class="ps-btn ps-btn--warning add-to-cart-button" data-id="{{i.id}}" data-slug="{{i.slug}}" data-value="{{i.slug}}">Add to cart</a></div>
+                                    <div class="ps-product__item cart" data-toggle="tooltip" data-placement="left" title="Add to cart"><a href="#"><i class="fa fa-shopping-basket"></i></a></div>
+                                    <div class="ps-product__item" data-toggle="tooltip" data-placement="left" title="Wishlist"><a href="wishlist.html"><i class="fa fa-heart-o"></i></a></div>
+                                    <div class="ps-product__item rotate" data-toggle="tooltip" data-placement="left" title="Add to compare"><a href="compare.html"><i class="fa fa-align-left"></i></a></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="ps-section__product">
+                        <div class="ps-product ps-product--standard">
+                            <div class="ps-product__thumbnail"><a class="ps-product__image" href="product1.html">
+                                    <figure><img src="/static/img/products/054.jpg" alt="alt" /><img src="/static/img/products/057.jpg" alt="alt" />
+                                    </figure>
+                                </a>
+                                <div class="ps-product__actions">
+                                    <div class="ps-product__item" data-toggle="tooltip" data-placement="left" title="Wishlist"><a href="#"><i class="fa fa-heart-o"></i></a></div>
+                                    <div class="ps-product__item rotate" data-toggle="tooltip" data-placement="left" title="Add to compare"><a href="#" data-toggle="modal" data-target="#popupCompare"><i class="fa fa-align-left"></i></a></div>
+                                    <div class="ps-product__item" data-toggle="tooltip" data-placement="left" title="Quick view"><a href="#" data-toggle="modal" data-target="#popupQuickview"><i class="fa fa-search"></i></a></div>
+                                    <div class="ps-product__item" data-toggle="tooltip" data-placement="left" title="Add to cart"><a href="#" data-toggle="modal" data-target="#popupAddcart"><i class="fa fa-shopping-basket"></i></a></div>
+                                </div>
+                                <div class="ps-product__badge">
+                                    <div class="ps-badge ps-badge--hot">Hot</div>
+                                </div>
+                            </div>
+                            <div class="ps-product__content">
+                                <h5 class="ps-product__title"><a href="product1.html">Somersung Sonic X2000 Pro Black</a></h5>
+                                <div class="ps-product__meta"><span class="ps-product__price">$299.99</span>
+                                </div>
+                                <div class="ps-product__rating">
+                                    <select class="ps-rating" data-read-only="true">
+                                        <option value="1">1</option>
+                                        <option value="2">2</option>
+                                        <option value="3">3</option>
+                                        <option value="4" selected="selected">4</option>
+                                        <option value="5">5</option>
+                                    </select><span class="ps-product__review">( Reviews)</span>
+                                </div>
+                                <div class="ps-product__desc">
+                                    <ul class="ps-product__list">
+                                        <li>Study history up to 30 days</li>
+                                        <li>Up to 5 users simultaneously</li>
+                                        <li>Has HEALTH certificate</li>
+                                    </ul>
+                                </div>
+                                <div class="ps-product__actions ps-product__group-mobile">
+                                    <div class="ps-product__quantity">
+                                        <div class="def-number-input number-input safari_only">
+                                            <button class="minus" onclick="this.parentNode.querySelector('input[type=number]').stepDown()"><i class="icon-minus"></i></button>
+                                            <input class="quantity" min="0" name="quantity" value="1" type="number" />
+                                            <button class="plus" onclick="this.parentNode.querySelector('input[type=number]').stepUp()"><i class="icon-plus"></i></button>
+                                        </div>
+                                    </div>
+                                    <div class="ps-product__cart"> <a class="ps-btn ps-btn--warning" href="#" data-toggle="modal" data-target="#popupAddcart">Add to cart</a></div>
+                                    <div class="ps-product__item cart" data-toggle="tooltip" data-placement="left" title="Add to cart"><a href="#"><i class="fa fa-shopping-basket"></i></a></div>
+                                    <div class="ps-product__item" data-toggle="tooltip" data-placement="left" title="Wishlist"><a href="wishlist.html"><i class="fa fa-heart-o"></i></a></div>
+                                    <div class="ps-product__item rotate" data-toggle="tooltip" data-placement="left" title="Add to compare"><a href="compare.html"><i class="fa fa-align-left"></i></a></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="ps-section__product">
+                        <div class="ps-product ps-product--standard">
+                            <div class="ps-product__thumbnail"><a class="ps-product__image" href="product1.html">
+                                    <figure><img src="/static/img/products/055.jpg" alt="alt" /><img src="/static/img/products/056.jpg" alt="alt" />
+                                    </figure>
+                                </a>
+                                <div class="ps-product__actions">
+                                    <div class="ps-product__item" data-toggle="tooltip" data-placement="left" title="Wishlist"><a href="#"><i class="fa fa-heart-o"></i></a></div>
+                                    <div class="ps-product__item rotate" data-toggle="tooltip" data-placement="left" title="Add to compare"><a href="#" data-toggle="modal" data-target="#popupCompare"><i class="fa fa-align-left"></i></a></div>
+                                    <div class="ps-product__item" data-toggle="tooltip" data-placement="left" title="Quick view"><a href="#" data-toggle="modal" data-target="#popupQuickview"><i class="fa fa-search"></i></a></div>
+                                    <div class="ps-product__item" data-toggle="tooltip" data-placement="left" title="Add to cart"><a href="#" data-toggle="modal" data-target="#popupAddcart"><i class="fa fa-shopping-basket"></i></a></div>
+                                </div>
+                                <div class="ps-product__badge">
+                                </div>
+                            </div>
+                            <div class="ps-product__content">
+                                <h5 class="ps-product__title"><a href="product1.html">Somersung Sonic X2500 Pro White</a></h5>
+                                <div class="ps-product__meta"><span class="ps-product__price">$39.99</span>
+                                </div>
+                                <div class="ps-product__rating">
+                                    <select class="ps-rating" data-read-only="true">
+                                        <option value="1">1</option>
+                                        <option value="2">2</option>
+                                        <option value="3">3</option>
+                                        <option value="4">4</option>
+                                        <option value="5" selected="selected">5</option>
+                                    </select><span class="ps-product__review">( Reviews)</span>
+                                </div>
+                                <div class="ps-product__desc">
+                                    <ul class="ps-product__list">
+                                        <li>Study history up to 30 days</li>
+                                        <li>Up to 5 users simultaneously</li>
+                                        <li>Has HEALTH certificate</li>
+                                    </ul>
+                                </div>
+                                <div class="ps-product__actions ps-product__group-mobile">
+                                    <div class="ps-product__quantity">
+                                        <div class="def-number-input number-input safari_only">
+                                            <button class="minus" onclick="this.parentNode.querySelector('input[type=number]').stepDown()"><i class="icon-minus"></i></button>
+                                            <input class="quantity" min="0" name="quantity" value="1" type="number" />
+                                            <button class="plus" onclick="this.parentNode.querySelector('input[type=number]').stepUp()"><i class="icon-plus"></i></button>
+                                        </div>
+                                    </div>
+                                    <div class="ps-product__cart"> <a class="ps-btn ps-btn--warning" href="#" data-toggle="modal" data-target="#popupAddcart">Add to cart</a></div>
+                                    <div class="ps-product__item cart" data-toggle="tooltip" data-placement="left" title="Add to cart"><a href="#"><i class="fa fa-shopping-basket"></i></a></div>
+                                    <div class="ps-product__item" data-toggle="tooltip" data-placement="left" title="Wishlist"><a href="wishlist.html"><i class="fa fa-heart-o"></i></a></div>
+                                    <div class="ps-product__item rotate" data-toggle="tooltip" data-placement="left" title="Add to compare"><a href="compare.html"><i class="fa fa-align-left"></i></a></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="ps-section__product">
+                        <div class="ps-product ps-product--standard">
+                            <div class="ps-product__thumbnail"><a class="ps-product__image" href="product1.html">
+                                    <figure><img src="/static/img/products/006.jpg" alt="alt" /><img src="/static/img/products/051.jpg" alt="alt" />
+                                    </figure>
+                                </a>
+                                <div class="ps-product__actions">
+                                    <div class="ps-product__item" data-toggle="tooltip" data-placement="left" title="Wishlist"><a href="#"><i class="fa fa-heart-o"></i></a></div>
+                                    <div class="ps-product__item rotate" data-toggle="tooltip" data-placement="left" title="Add to compare"><a href="#" data-toggle="modal" data-target="#popupCompare"><i class="fa fa-align-left"></i></a></div>
+                                    <div class="ps-product__item" data-toggle="tooltip" data-placement="left" title="Quick view"><a href="#" data-toggle="modal" data-target="#popupQuickview"><i class="fa fa-search"></i></a></div>
+                                    <div class="ps-product__item" data-toggle="tooltip" data-placement="left" title="Add to cart"><a href="#" data-toggle="modal" data-target="#popupAddcart"><i class="fa fa-shopping-basket"></i></a></div>
+                                </div>
+                                <div class="ps-product__badge">
+                                    <div class="ps-badge ps-badge--sold">Sold Out</div>
+                                </div>
+                            </div>
+                            <div class="ps-product__content">
+                                <h5 class="ps-product__title"><a href="product1.html">GAnti-Dust Filter, Breathable, 3 Layers of Purifying</a></h5>
+                                <div class="ps-product__meta"><span class="ps-product__price">$17.99</span>
+                                </div>
+                                <div class="ps-product__rating">
+                                    <select class="ps-rating" data-read-only="true">
+                                        <option value="1">1</option>
+                                        <option value="2">2</option>
+                                        <option value="3">3</option>
+                                        <option value="4">4</option>
+                                        <option value="5" selected="selected">5</option>
+                                    </select><span class="ps-product__review">( Reviews)</span>
+                                </div>
+                                <div class="ps-product__desc">
+                                    <ul class="ps-product__list">
+                                        <li>Study history up to 30 days</li>
+                                        <li>Up to 5 users simultaneously</li>
+                                        <li>Has HEALTH certificate</li>
+                                    </ul>
+                                </div>
+                                <div class="ps-product__actions ps-product__group-mobile">
+                                    <div class="ps-product__quantity">
+                                        <div class="def-number-input number-input safari_only">
+                                            <button class="minus" onclick="this.parentNode.querySelector('input[type=number]').stepDown()"><i class="icon-minus"></i></button>
+                                            <input class="quantity" min="0" name="quantity" value="1" type="number" />
+                                            <button class="plus" onclick="this.parentNode.querySelector('input[type=number]').stepUp()"><i class="icon-plus"></i></button>
+                                        </div>
+                                    </div>
+                                    <div class="ps-product__cart"> <a class="ps-btn ps-btn--warning" href="#" data-toggle="modal" data-target="#popupAddcart">Add to cart</a></div>
+                                    <div class="ps-product__item cart" data-toggle="tooltip" data-placement="left" title="Add to cart"><a href="#"><i class="fa fa-shopping-basket"></i></a></div>
+                                    <div class="ps-product__item" data-toggle="tooltip" data-placement="left" title="Wishlist"><a href="wishlist.html"><i class="fa fa-heart-o"></i></a></div>
+                                    <div class="ps-product__item rotate" data-toggle="tooltip" data-placement="left" title="Add to compare"><a href="compare.html"><i class="fa fa-align-left"></i></a></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="ps-section__product">
+                        <div class="ps-product ps-product--standard">
+                            <div class="ps-product__thumbnail"><a class="ps-product__image" href="product1.html">
+                                    <figure><img src="/static/img/products/017.jpg" alt="alt" /><img src="/static/img/products/002.jpg" alt="alt" />
+                                    </figure>
+                                </a>
+                                <div class="ps-product__actions">
+                                    <div class="ps-product__item" data-toggle="tooltip" data-placement="left" title="Wishlist"><a href="#"><i class="fa fa-heart-o"></i></a></div>
+                                    <div class="ps-product__item rotate" data-toggle="tooltip" data-placement="left" title="Add to compare"><a href="#" data-toggle="modal" data-target="#popupCompare"><i class="fa fa-align-left"></i></a></div>
+                                    <div class="ps-product__item" data-toggle="tooltip" data-placement="left" title="Quick view"><a href="#" data-toggle="modal" data-target="#popupQuickview"><i class="fa fa-search"></i></a></div>
+                                    <div class="ps-product__item" data-toggle="tooltip" data-placement="left" title="Add to cart"><a href="#" data-toggle="modal" data-target="#popupAddcart"><i class="fa fa-shopping-basket"></i></a></div>
+                                </div>
+                                <div class="ps-product__badge">
+                                </div>
+                            </div>
+                            <div class="ps-product__content">
+                                <h5 class="ps-product__title"><a href="product1.html">Red Hot Water Bottle, 2 Quart Capacity</a></h5>
+                                <div class="ps-product__meta"><span class="ps-product__price">$13.64</span>
+                                </div>
+                                <div class="ps-product__rating">
+                                    <select class="ps-rating" data-read-only="true">
+                                        <option value="1">1</option>
+                                        <option value="2">2</option>
+                                        <option value="3">3</option>
+                                        <option value="4">4</option>
+                                        <option value="5" selected="selected">5</option>
+                                    </select><span class="ps-product__review">( Reviews)</span>
+                                </div>
+                                <div class="ps-product__desc">
+                                    <ul class="ps-product__list">
+                                        <li>Study history up to 30 days</li>
+                                        <li>Up to 5 users simultaneously</li>
+                                        <li>Has HEALTH certificate</li>
+                                    </ul>
+                                </div>
+                                <div class="ps-product__actions ps-product__group-mobile">
+                                    <div class="ps-product__quantity">
+                                        <div class="def-number-input number-input safari_only">
+                                            <button class="minus" onclick="this.parentNode.querySelector('input[type=number]').stepDown()"><i class="icon-minus"></i></button>
+                                            <input class="quantity" min="0" name="quantity" value="1" type="number" />
+                                            <button class="plus" onclick="this.parentNode.querySelector('input[type=number]').stepUp()"><i class="icon-plus"></i></button>
+                                        </div>
+                                    </div>
+                                    <div class="ps-product__cart"> <a class="ps-btn ps-btn--warning" href="#" data-toggle="modal" data-target="#popupAddcart">Add to cart</a></div>
+                                    <div class="ps-product__item cart" data-toggle="tooltip" data-placement="left" title="Add to cart"><a href="#"><i class="fa fa-shopping-basket"></i></a></div>
+                                    <div class="ps-product__item" data-toggle="tooltip" data-placement="left" title="Wishlist"><a href="wishlist.html"><i class="fa fa-heart-o"></i></a></div>
+                                    <div class="ps-product__item rotate" data-toggle="tooltip" data-placement="left" title="Add to compare"><a href="compare.html"><i class="fa fa-align-left"></i></a></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="ps-section__product">
+                        <div class="ps-product ps-product--standard">
+                            <div class="ps-product__thumbnail"><a class="ps-product__image" href="product1.html">
+                                    <figure><img src="/static/img/products/028.jpg" alt="alt" /><img src="/static/img/products/045.jpg" alt="alt" />
+                                    </figure>
+                                </a>
+                                <div class="ps-product__actions">
+                                    <div class="ps-product__item" data-toggle="tooltip" data-placement="left" title="Wishlist"><a href="#"><i class="fa fa-heart-o"></i></a></div>
+                                    <div class="ps-product__item rotate" data-toggle="tooltip" data-placement="left" title="Add to compare"><a href="#" data-toggle="modal" data-target="#popupCompare"><i class="fa fa-align-left"></i></a></div>
+                                    <div class="ps-product__item" data-toggle="tooltip" data-placement="left" title="Quick view"><a href="#" data-toggle="modal" data-target="#popupQuickview"><i class="fa fa-search"></i></a></div>
+                                    <div class="ps-product__item" data-toggle="tooltip" data-placement="left" title="Add to cart"><a href="#" data-toggle="modal" data-target="#popupAddcart"><i class="fa fa-shopping-basket"></i></a></div>
+                                </div>
+                                <div class="ps-product__badge">
+                                    <div class="ps-badge ps-badge--sold">Sold Out</div>
+                                </div>
+                            </div>
+                            <div class="ps-product__content">
+                                <h5 class="ps-product__title"><a href="product1.html">Digital Thermometer X30-Pro</a></h5>
+                                <div class="ps-product__meta"><span class="ps-product__price sale">$88.39</span><span class="ps-product__del">$60.23</span>
+                                </div>
+                                <div class="ps-product__rating">
+                                    <select class="ps-rating" data-read-only="true">
+                                        <option value="1">1</option>
+                                        <option value="2">2</option>
+                                        <option value="3">3</option>
+                                        <option value="4">4</option>
+                                        <option value="5" selected="selected">5</option>
+                                    </select><span class="ps-product__review">( Reviews)</span>
+                                </div>
+                                <div class="ps-product__desc">
+                                    <ul class="ps-product__list">
+                                        <li>Study history up to 30 days</li>
+                                        <li>Up to 5 users simultaneously</li>
+                                        <li>Has HEALTH certificate</li>
+                                    </ul>
+                                </div>
+                                <div class="ps-product__actions ps-product__group-mobile">
+                                    <div class="ps-product__quantity">
+                                        <div class="def-number-input number-input safari_only">
+                                            <button class="minus" onclick="this.parentNode.querySelector('input[type=number]').stepDown()"><i class="icon-minus"></i></button>
+                                            <input class="quantity" min="0" name="quantity" value="1" type="number" />
+                                            <button class="plus" onclick="this.parentNode.querySelector('input[type=number]').stepUp()"><i class="icon-plus"></i></button>
+                                        </div>
+                                    </div>
+                                    <div class="ps-product__cart"> <a class="ps-btn ps-btn--warning" href="#" data-toggle="modal" data-target="#popupAddcart">Add to cart</a></div>
+                                    <div class="ps-product__item cart" data-toggle="tooltip" data-placement="left" title="Add to cart"><a href="#"><i class="fa fa-shopping-basket"></i></a></div>
+                                    <div class="ps-product__item" data-toggle="tooltip" data-placement="left" title="Wishlist"><a href="wishlist.html"><i class="fa fa-heart-o"></i></a></div>
+                                    <div class="ps-product__item rotate" data-toggle="tooltip" data-placement="left" title="Add to compare"><a href="compare.html"><i class="fa fa-align-left"></i></a></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="ps-section__product">
+                        <div class="ps-product ps-product--standard">
+                            <div class="ps-product__thumbnail"><a class="ps-product__image" href="product1.html">
+                                    <figure><img src="/static/img/products/042.jpg" alt="alt" />
+                                    </figure>
+                                </a>
+                                <div class="ps-product__actions">
+                                    <div class="ps-product__item" data-toggle="tooltip" data-placement="left" title="Wishlist"><a href="#"><i class="fa fa-heart-o"></i></a></div>
+                                    <div class="ps-product__item rotate" data-toggle="tooltip" data-placement="left" title="Add to compare"><a href="#" data-toggle="modal" data-target="#popupCompare"><i class="fa fa-align-left"></i></a></div>
+                                    <div class="ps-product__item" data-toggle="tooltip" data-placement="left" title="Quick view"><a href="#" data-toggle="modal" data-target="#popupQuickview"><i class="fa fa-search"></i></a></div>
+                                    <div class="ps-product__item" data-toggle="tooltip" data-placement="left" title="Add to cart"><a href="#" data-toggle="modal" data-target="#popupAddcart"><i class="fa fa-shopping-basket"></i></a></div>
+                                </div>
+                                <div class="ps-product__badge">
+                                </div>
+                            </div>
+                            <div class="ps-product__content">
+                                <h5 class="ps-product__title"><a href="product1.html">Extractor used to remove teeth</a></h5>
+                                <div class="ps-product__meta"><span class="ps-product__price">$53.64</span>
+                                </div>
+                                <div class="ps-product__rating">
+                                    <select class="ps-rating" data-read-only="true">
+                                        <option value="1">1</option>
+                                        <option value="2">2</option>
+                                        <option value="3">3</option>
+                                        <option value="4">4</option>
+                                        <option value="5" selected="selected">5</option>
+                                    </select><span class="ps-product__review">( Reviews)</span>
+                                </div>
+                                <div class="ps-product__desc">
+                                    <ul class="ps-product__list">
+                                        <li>Study history up to 30 days</li>
+                                        <li>Up to 5 users simultaneously</li>
+                                        <li>Has HEALTH certificate</li>
+                                    </ul>
+                                </div>
+                                <div class="ps-product__actions ps-product__group-mobile">
+                                    <div class="ps-product__quantity">
+                                        <div class="def-number-input number-input safari_only">
+                                            <button class="minus" onclick="this.parentNode.querySelector('input[type=number]').stepDown()"><i class="icon-minus"></i></button>
+                                            <input class="quantity" min="0" name="quantity" value="1" type="number" />
+                                            <button class="plus" onclick="this.parentNode.querySelector('input[type=number]').stepUp()"><i class="icon-plus"></i></button>
+                                        </div>
+                                    </div>
+                                    <div class="ps-product__cart"> <a class="ps-btn ps-btn--warning" href="#" data-toggle="modal" data-target="#popupAddcart">Add to cart</a></div>
+                                    <div class="ps-product__item cart" data-toggle="tooltip" data-placement="left" title="Add to cart"><a href="#"><i class="fa fa-shopping-basket"></i></a></div>
+                                    <div class="ps-product__item" data-toggle="tooltip" data-placement="left" title="Wishlist"><a href="wishlist.html"><i class="fa fa-heart-o"></i></a></div>
+                                    <div class="ps-product__item rotate" data-toggle="tooltip" data-placement="left" title="Add to compare"><a href="compare.html"><i class="fa fa-align-left"></i></a></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="ps-section__product">
+                        <div class="ps-product ps-product--standard">
+                            <div class="ps-product__thumbnail"><a class="ps-product__image" href="product1.html">
+                                    <figure><img src="/static/img/products/016.jpg" alt="alt" /><img src="/static/img/products/021.jpg" alt="alt" />
+                                    </figure>
+                                </a>
+                                <div class="ps-product__actions">
+                                    <div class="ps-product__item" data-toggle="tooltip" data-placement="left" title="Wishlist"><a href="#"><i class="fa fa-heart-o"></i></a></div>
+                                    <div class="ps-product__item rotate" data-toggle="tooltip" data-placement="left" title="Add to compare"><a href="#" data-toggle="modal" data-target="#popupCompare"><i class="fa fa-align-left"></i></a></div>
+                                    <div class="ps-product__item" data-toggle="tooltip" data-placement="left" title="Quick view"><a href="#" data-toggle="modal" data-target="#popupQuickview"><i class="fa fa-search"></i></a></div>
+                                    <div class="ps-product__item" data-toggle="tooltip" data-placement="left" title="Add to cart"><a href="#" data-toggle="modal" data-target="#popupAddcart"><i class="fa fa-shopping-basket"></i></a></div>
+                                </div>
+                                <div class="ps-product__badge">
+                                    <div class="ps-badge ps-badge--hot">Hot</div>
+                                </div>
+                            </div>
+                            <div class="ps-product__content">
+                                <h5 class="ps-product__title"><a href="product1.html">Oxygen concentrator model KTS-5000</a></h5>
+                                <div class="ps-product__meta"><span class="ps-product__price">$432.64</span>
+                                </div>
+                                <div class="ps-product__rating">
+                                    <select class="ps-rating" data-read-only="true">
+                                        <option value="1">1</option>
+                                        <option value="2">2</option>
+                                        <option value="3">3</option>
+                                        <option value="4" selected="selected">4</option>
+                                        <option value="5">5</option>
+                                    </select><span class="ps-product__review">( Reviews)</span>
+                                </div>
+                                <div class="ps-product__desc">
+                                    <ul class="ps-product__list">
+                                        <li>Study history up to 30 days</li>
+                                        <li>Up to 5 users simultaneously</li>
+                                        <li>Has HEALTH certificate</li>
+                                    </ul>
+                                </div>
+                                <div class="ps-product__actions ps-product__group-mobile">
+                                    <div class="ps-product__quantity">
+                                        <div class="def-number-input number-input safari_only">
+                                            <button class="minus" onclick="this.parentNode.querySelector('input[type=number]').stepDown()"><i class="icon-minus"></i></button>
+                                            <input class="quantity" min="0" name="quantity" value="1" type="number" />
+                                            <button class="plus" onclick="this.parentNode.querySelector('input[type=number]').stepUp()"><i class="icon-plus"></i></button>
+                                        </div>
+                                    </div>
+                                    <div class="ps-product__cart"> <a class="ps-btn ps-btn--warning" href="#" data-toggle="modal" data-target="#popupAddcart">Add to cart</a></div>
+                                    <div class="ps-product__item cart" data-toggle="tooltip" data-placement="left" title="Add to cart"><a href="#"><i class="fa fa-shopping-basket"></i></a></div>
+                                    <div class="ps-product__item" data-toggle="tooltip" data-placement="left" title="Wishlist"><a href="wishlist.html"><i class="fa fa-heart-o"></i></a></div>
+                                    <div class="ps-product__item rotate" data-toggle="tooltip" data-placement="left" title="Add to compare"><a href="compare.html"><i class="fa fa-align-left"></i></a></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+</div>
+{% endblock %}
+{% block contentScript %}
+
+{% comment %} my script here {% endcomment %}
+{% endblock%}

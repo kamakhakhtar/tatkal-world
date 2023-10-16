@@ -1,0 +1,125 @@
+{% extends 'includes/base.html' %}
+{% block head %}
+<title>Tatkal World | Trusted Software Provider </title>
+<meta name="description" content="A powerful and conceptual webapplication for authenticate irctc mobile verification via otp.">
+
+{% endblock %}
+{% block content%}
+{% csrf_token %}
+<div class="ps-categogy">
+    <div class="container">
+        <ul class="ps-breadcrumb">
+            <li class="ps-breadcrumb__item"><a href="index.html">Home</a></li>
+            <li class="ps-breadcrumb__item active" aria-current="page">search</li>
+        </ul>
+        <h1 class="ps-categogy__name">Search results: “{{query}}”</h1>
+        {% if product|length < 1 %}
+        <br>
+        <h3>Sorry !! No product found</h3>
+        <br>
+        {% endif %}
+        {% if product|length > 0 %}
+
+        <div class="ps-categogy__content">
+            <div class="row row-reverse">
+                <div class="col-12">
+                    <div class="ps-categogy__wrapper">
+                        <div class="ps-categogy__type"> <a class="active" href="category-list.html"><img src="/static/img/icon/bars.svg" alt=""></a><a href="category-grid-detail.html"><img src="/static/img/icon/gird2.svg" alt=""></a><a href="category-grid.html"><img src="/static/img/icon/gird3.svg" alt=""></a><a href="category-grid-separate.html"><img src="/static/img/icon/gird4.svg" alt=""></a></div>
+                        <div class="ps-categogy__onsale">
+                            <form>
+                                <div class="custom-control custom-checkbox">
+                                    <input class="custom-control-input" type="checkbox" id="onSaleProduct">
+                                    <label class="custom-control-label" for="onSaleProduct">Show only products on sale</label>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="ps-categogy__sort">
+                            <form><span>Sort by</span>
+                                <select class="form-select">
+                                    <option selected="">Latest</option>
+                                    <option value="Popularity">Popularity</option>
+                                    <option value="Average rating">Average rating</option>
+                                    <option value="Latest">Latest</option>
+                                    <option value="Price: low to high">Price: low to high</option>
+                                    <option value="Price: high to low">Price: high to low</option>
+                                </select>
+                            </form>
+                        </div>
+                        <div class="ps-categogy__show">
+                            <form><span>Show</span>
+                                <select class="form-select">
+                                    <option selected="">12</option>
+                                    <option value="12">12</option>
+                                    <option value="24">24</option>
+                                    <option value="36">36</option>
+                                    <option value="48">48</option>
+                                </select>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="ps-categogy--list">
+                        {% for pro in product%}
+                        <div class="ps-product ps-product--list">
+                            <div class="ps-product__content">
+                                <div class="ps-product__thumbnail"><a class="ps-product__image" href="#">
+                                        <figure><img src="/{{pro.image}}" alt="alt"><img src="/{{pro.image}}" alt="alt">
+                                        </figure>
+                                    </a>
+                                    <div class="ps-product__actions">
+                                        <div class="ps-product__item" data-toggle="tooltip" data-placement="left" title="" data-original-title="Quick view"><a href="#" data-toggle="modal" data-target="#popupQuickview"><i class="fa fa-search"></i></a></div>
+                                    </div>
+                                    <div class="ps-product__badge">
+                                        <div class="ps-badge ps-badge--sale">{{prod.condition}}</div>
+                                    </div>
+                                </div>
+                                <div class="ps-product__info">
+                                    <h5 class="ps-product__title"><a>{{pro.name}}</a></h5>
+                                   
+                                    <div class="ps-product__desc">
+                                      {{pro.description}}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="ps-product__footer">
+                                <div class="ps-product__meta"><span class="ps-product__price sale">&#8377;{{pro.price}}</span>
+                                </div>
+                                <div class="ps-product__quantity">
+                                    <h6>Quantity</h6>
+                                    <div class="def-number-input number-input safari_only">
+                                        <button class="minus" onclick="this.parentNode.querySelector('input[type=number]').stepDown()"><i class="icon-minus"></i></button>
+                                        <input class="quantity" min="0" name="quantity" value="1" type="number">
+                                        <button class="plus" onclick="this.parentNode.querySelector('input[type=number]').stepUp()"><i class="icon-plus"></i></button>
+                                    </div><a class="ps-btn ps-btn--warning" href="#" data-toggle="modal" data-target="#popupAddcart">Add to cart</a>
+                                </div>
+                                <div class="ps-product__variations"><a class="ps-product__link" href="wishlist.html">Add to wishlist</a><a class="ps-product__link" href="compare.html">Add to Compare</a></div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                        
+                    </div>
+                    <div class="ps-pagination">
+                        <ul class="pagination">
+                            <li><a href="#"><i class="fa fa-angle-double-left"></i></a></li>
+                            <li class="active"><a href="#">1</a></li>
+                            <li><a href="#">2</a></li>
+                            <li><a href="#">3</a></li>
+                            <li><a href="#"><i class="fa fa-angle-double-right"></i></a></li>
+                        </ul>
+                    </div>
+                    <div class="ps-delivery" data-background="img/promotion/banner-delivery-2.jpg" style="background-image: url(&quot;img/promotion/banner-delivery-2.jpg&quot;);">
+                        <div class="ps-delivery__content">
+                            <div class="ps-delivery__text"> <i class="icon-shield-check"></i><span> <strong>100% Secure delivery </strong>without contacting the courier</span></div><a class="ps-delivery__more" href="#">More</a>
+                        </div>
+                    </div>
+                </div>
+               
+            </div>
+        </div>
+        {% endif %}
+
+    </div>
+</div>
+{% endblock %}
+{% block contentScript %}
+{% comment %} my script here {% endcomment %}
+{% endblock%}

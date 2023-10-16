@@ -1,0 +1,316 @@
+{% extends 'includes/base.html' %}
+{% block head %}
+<title>Tatkal World | Trusted Software Provider </title>
+<meta name="description" content="A powerful and conceptual webapplication for authenticate irctc mobile verification via otp.">
+
+{% endblock %}
+{% block content%}
+{% csrf_token %}
+<div class="ps-home__content mt-50">
+    <div class="container">
+        <section class="ps-section--banner ps-banner--container">
+            <div class="ps-section__overlay">
+                <div class="ps-section__loading"></div>
+            </div>
+            <div class="owl-carousel" data-owl-auto="false" data-owl-loop="true" data-owl-speed="15000" data-owl-gap="0" data-owl-nav="true" data-owl-dots="true" data-owl-item="1" data-owl-item-xs="1" data-owl-item-sm="1" data-owl-item-md="1" data-owl-item-lg="1" data-owl-duration="1000" data-owl-mousedrag="on">
+                <div class="ps-banner" style="background:#103178;">
+                    <div class="container-no-round">
+                        <div class="ps-banner__block">
+                            <div class="ps-banner__content">
+                                <h2 class="ps-banner__title text-white">GADAR (SIKKA) <br/> Tatkal Software</h2>
+                                <div class="ps-banner__desc text-white">India’s No 1 Trusted Tatkal Software Platform</div>
+                                <div class="ps-banner__price"> <span class="text-yellow">&#8377; 1600</span>
+                                    <del>&#8377; 2000</del>
+                                </div><a class="bg-yellow ps-banner__shop" href="#">Add to cart</a>
+                                <div class="ps-banner__persen bg-yellow">-20%</div>
+                            </div>
+                            <div class="ps-banner__thumnail ps-banner__fluid"><img class="ps-banner__image" src="/static/img/promotion/slide2.jpg" alt="alt" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="ps-banner" style="background:#F0F2F5;">
+                    <div class="container container-initial">
+                        <div class="ps-banner__block">
+                            <div class="ps-banner__content">
+                                <h2 class="ps-banner__title">Fully equipped <br/> of ophthalmic rooms</h2>
+                                <div class="ps-banner__desc">Only in this week. Don’t misss!</div>
+                                <div class="ps-banner__btn-group">
+                                    <div class="ps-banner__btn"><img src="/static/img/icon/bacterial.svg" alt="alt" />Anti-Bacterial</div>
+                                    <div class="ps-banner__btn"><img src="/static/img/icon/virus.svg" alt="alt" />Anti-Virus</div>
+                                </div><a class="bg-warning ps-banner__shop" href="#">Shop now</a>
+                                <div class="ps-banner__persen bg-yellow ps-top"><small>only</small>$25</div>
+                            </div>
+                            <div class="ps-banner__thumnail"><img class="ps-banner__round" src="/static/img/round2.png" alt="alt" /><img class="ps-banner__image" src="/static/img/promotion/slide5.jpg" alt="alt" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="ps-banner" style="background:#306A53;">
+                    <div class="container-no-round">
+                        <div class="ps-banner__block">
+                            <div class="ps-banner__content">
+                                <h2 class="ps-banner__title text-white">Antibacterial <br/> Medical Mask</h2>
+                                <div class="ps-banner__desc text-white">Only in this week. Don’t misss!</div>
+                                <div class="ps-banner__btn-group">
+                                    <div class="ps-banner__btn text-warning"><img src="/static/img/icon/bacterial.svg" alt="alt" style="filter: invert(60%) sepia(75%) saturate(1000%) hue-rotate(360deg) brightness(100%) contrast(100%);" />Anti-Bacterial</div>
+                                    <div class="ps-banner__btn text-warning"><img src="/static/img/icon/virus.svg" alt="alt" style="filter: invert(60%) sepia(75%) saturate(1000%) hue-rotate(360deg) brightness(100%) contrast(100%);" />Anti-Virus</div>
+                                </div><a class="bg-warning ps-banner__shop" href="#">Add to cart</a>
+                                <div class="ps-banner__persen bg-warning ps-left">-30%</div>
+                            </div>
+                            <div class="ps-banner__thumnail ps-banner__fluid"><img class="ps-banner__image" src="/static/img/promotion/slide8.jpg" alt="alt" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <div class="ps-promo">
+            <div class="row">
+                <div class="col-12 col-md-6">
+                    <div class="ps-promo__item"><img class="ps-promo__banner" src="/static/img/promotion/bg-banner4.jpg" alt="alt" />
+                        <div class="ps-promo__content"><span class="ps-promo__badge">New</span>
+                            <h4 class="mb-20 ps-promo__name text-white">Get 99.9% uptime VPS<br/>with full customer support</h4><a class="ps-promo__btn" href="category-grid.html">More</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 col-md-6">
+                    <div class="ps-promo__item"><img class="ps-promo__banner" src="/static/img/promotion/bg-banner5.jpg" alt="alt" />
+                        <div class="ps-promo__content">
+                            <h4 class="ps-promo__name">IRCTC ID<br/>Email / Full Verified ID.</h4>
+                            <div class="ps-promo__sale">-10%</div><a class="ps-promo__btn" href="category-grid.html">Shop now</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+       
+    </div>
+    <section class="ps-section--latest mt-100">
+        <div class="container">
+            <h3 class="ps-section__title">Latest products</h3>
+            <div class="ps-section__carousel">
+                <div class="owl-carousel" data-owl-auto="false" data-owl-loop="true" data-owl-speed="13000" data-owl-gap="0" data-owl-nav="true" data-owl-dots="true" data-owl-item="5" data-owl-item-xs="2" data-owl-item-sm="2" data-owl-item-md="3" data-owl-item-lg="5" data-owl-item-xl="5" data-owl-duration="1000" data-owl-mousedrag="on">
+                    {% for prod in product %}
+                    <div class="ps-section__product">
+                        <div class="ps-product ps-product--standard">
+                            <div class="ps-product__thumbnail"><a class="ps-product__image" href="/product/{{prod.slug}}">
+                                    <figure><img src="{{prod.image}}" alt="alt" /><img src="{{prod.image}}" alt="alt" />
+                                    </figure>
+                                </a>
+                                <div class="ps-product__actions">
+                                    
+                                    
+                                    <div class="ps-product__item" data-toggle="tooltip" data-placement="left" title="Quick view"><a href="#" data-toggle="modal" data-target="#popupQuickview-{{forloop.counter}}"><i class="fa fa-search"></i></a></div>
+                                    {% comment %} <div class="ps-product__item" data-toggle="tooltip" data-placement="left" title="Add to cart"><a href="#" data-toggle="modal" data-target="#popupAddcart-{{forloop.counter}}"><i class="fa fa-shopping-basket"></i></a></div> {% endcomment %}
+                                </div>
+                                <div class="ps-product__badge">
+                                    <div class="ps-badge ps-badge--new">{{prod.condition}}</div>
+                                </div>
+                            </div>
+                            <div class="ps-product__content">
+                                <h5 class="ps-product__title" ><a href="/product/{{prod.slug}}">{{prod.name}}</a></h5>
+                                <div class="ps-product__meta"><span class="ps-product__price sale">&#8377;{{prod.price}}</span>
+                                </div>
+                                
+                                <div class="ps-product__desc">
+                                    <ul class="ps-product__list">
+                                        <li>Study history up to 30 days</li>
+                                        <li>Up to 5 users simultaneously</li>
+                                        <li>Has HEALTH certificate</li>
+                                    </ul>
+                                </div>
+                                <div class="ps-product__actions ps-product__group-mobile">
+                                    <div class="ps-product__quantity">
+                                        <div class="def-number-input number-input safari_only">
+                                            <button class="minus" onclick="this.parentNode.querySelector('input[type=number]').stepDown()"><i class="icon-minus"></i></button>
+                                            <input class="quantity" min="1" name="quantity" value="1" type="number">
+                                            <button class="plus" onclick="this.parentNode.querySelector('input[type=number]').stepUp()"><i class="icon-plus"></i></button>
+                                        </div>
+                                    </div>
+                                    <div class="ps-product__cart"> <a class="ps-btn ps-btn--warning" href="#">Add to cart</a></div>
+                                    <div class="ps-product__item cart" data-toggle="tooltip" data-placement="left" title="" data-original-title="Add to cart"><a href="#"><i class="fa fa-shopping-basket"></i></a></div>
+                                    <div class="ps-product__item" data-toggle="tooltip" data-placement="left" title="" data-original-title="Wishlist"><a href="wishlist.html"><i class="fa fa-heart-o"></i></a></div>
+                                    <div class="ps-product__item rotate" data-toggle="tooltip" data-placement="left" title="" data-original-title="Add to compare"><a href="compare.html"><i class="fa fa-align-left"></i></a></div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                    </div>
+                   {% endfor %}
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <div class="container">
+       
+        <section class="ps-banner--round mb-100">
+            <div class="ps-banner">
+                <div class="ps-banner__block">
+                    <div class="ps-banner__content">
+                        <div class="ps-logo"><a href="index.html"> <img src="/static/img/logo.png" alt></a></div>
+                        <h2 class="ps-banner__title">Your one and only best <br>Tatkal Software Provider!</h2>
+                        <div class="ps-banner__btn-group">
+                            <div class="ps-banner__btn"><img src="/static/img/icon/virus.svg" alt>10 Years trust</div>
+                            <div class="ps-banner__btn"><img src="/static/img/icon/ribbon.svg" alt>Verified and Tested softwares</div>
+                        </div><a class="ps-banner__shop bg-yellow" href="#">About</a>
+                    </div>
+                    <div class="ps-banner__thumnail"><img class="ps-banner__round" src="/static/img/round5.png" alt><img class="ps-banner__image" src="/static/img/girl-face-mask.png" alt></div>
+                </div>
+            </div>
+        </section>
+        <div class="ps-promo mb-100">
+            <div class="row">
+                <div class="col-12 col-md-4">
+                    <div class="ps-promo__item"><img class="ps-promo__banner" src="/static/img/promotion/bg-banner6.jpg" alt="alt" />
+                        <div class="ps-promo__content">
+                            <h4 class="ps-promo__name">Get rid <br/>of bacteria <br/>in your home</h4>
+                            <div class="ps-promo__sale text-primary">-7%</div><a class="ps-promo__btn" href="category-grid.html">Shop now</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 col-md-4">
+                    <div class="ps-promo__item"><img class="ps-promo__banner" src="/static/img/promotion/bg-banner7.jpg" alt="alt" />
+                        <div class="ps-promo__content"><span class="ps-promo__badge">New</span>
+                            <h4 class="mb-20 ps-promo__name">SuperBrush <br/>X200 Higenic <br/>ProMaster</h4><a class="ps-promo__btn" href="category-grid.html">More</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 col-md-4">
+                    <div class="ps-promo__item"><img class="ps-promo__banner" src="/static/img/promotion/bg-banner8.jpg" alt="alt" />
+                        <div class="ps-promo__content">
+                            <h4 class="text-white ps-promo__name">Hubble <br/>Eye <br/>Lenses</h4>
+                            <div class="ps-promo__sale text-yellow">-12%</div><a class="ps-promo__btn" href="category-grid.html">Shop now</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <section class="ps-section--featured mb-100">
+            <h3 class="ps-section__title">Featured products</h3>
+            <div class="ps-section__content">
+                <div class="row m-0">
+
+                    {% for prod in product %}
+                    <div class="col-6 col-md-4 col-lg-2dot4 p-0">
+                        <div class="ps-section__product">
+                            <div class="ps-product ps-product--standard">
+                                <div class="ps-product__thumbnail"><a class="ps-product__image" href="/product/{{prod.slug}}">
+                                    <figure><img src="{{prod.image}}" alt="alt" /><img src="{{prod.image}}" alt="alt" />
+                                    </figure>
+                                </a>
+                                    <div class="ps-product__actions">
+                                        
+                                        <div class="ps-product__item" data-toggle="tooltip" data-placement="left" title="Quick view"><a href="#" data-toggle="modal" data-target="#popupQuickview-{{forloop.counter}}"><i class="fa fa-search"></i></a></div>
+                                        
+                                    </div>
+                                    <div class="ps-product__badge">
+                                        <div class="ps-badge ps-badge--new">{{prod.condition}}</div>
+                                    </div>
+                                </div>
+                                <div class="ps-product__content">
+                                    <h5 class="ps-product__title"><a href="/product/{{prod.slug}}">{{prod.name}}</a></h5>
+                                    <div class="ps-product__meta"><span class="ps-product__price">&#8377;{{prod.price}}</span>
+                                    </div>
+                                    
+                                    <div class="ps-product__desc">
+                                        <ul class="ps-product__list">
+                                            <li>Study history up to 30 days</li>
+                                            <li>Up to 5 users simultaneously</li>
+                                            <li>Has HEALTH certificate</li>
+                                        </ul>
+                                    </div>
+                                    <div class="ps-product__actions ps-product__group-mobile">
+                                        <div class="ps-product__quantity">
+                                            <div class="def-number-input number-input safari_only">
+                                                <button class="minus" onclick="this.parentNode.querySelector('input[type=number]').stepDown()"><i class="icon-minus"></i></button>
+                                                <input class="quantity" min="0" name="quantity" value="1" type="number" />
+                                                <button class="plus" onclick="this.parentNode.querySelector('input[type=number]').stepUp()"><i class="icon-plus"></i></button>
+                                            </div>
+                                        </div>
+                                        <div class="ps-product__cart"> <a class="ps-btn ps-btn--warning" href="#">Add to cart</a></div>
+                                        <div class="ps-product__item cart" data-toggle="tooltip" data-placement="left" title="" data-original-title="Add to cart"><a href="#"><i class="fa fa-shopping-basket"></i></a></div>
+                                        <div class="ps-product__item" data-toggle="tooltip" data-placement="left" title="" data-original-title="Wishlist"><a href="wishlist.html"><i class="fa fa-heart-o"></i></a></div>
+                                        
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {%endfor%}
+                    
+                </div>
+                <div class="ps-shop__more"><a href="#">Show all</a></div>
+            </div>
+        </section>
+        <section class="ps-section--blog mb-100">
+            <h3 class="ps-section__title">From the blog</h3>
+            <div class="ps-section__carousel">
+                <div class="owl-carousel" data-owl-auto="false" data-owl-loop="true" data-owl-speed="13000" data-owl-gap="0" data-owl-nav="true" data-owl-dots="true" data-owl-item="3" data-owl-item-xs="1" data-owl-item-sm="1" data-owl-item-md="2" data-owl-item-lg="3" data-owl-item-xl="3" data-owl-duration="1000" data-owl-mousedrag="on">
+                    <div class="ps-section__item">
+                        <div class="ps-blog--latset">
+                            <div class="ps-blog__thumbnail"><a href="blog-post1.html"><img src="/static/img/blog/blog2-496x262.jpg" alt="alt" /></a>
+                                <div class="ps-blog__badge"><span class="ps-badge__item">MEDIC</span><span class="ps-badge__item">PHARMACY</span><span class="ps-badge__item">SALE</span>
+                                </div>
+                            </div>
+                            <div class="ps-blog__content">
+                                <div class="ps-blog__meta"> <span class="ps-blog__date">May 18, 2021</span><a class="ps-blog__author" href="#">Alfredo Austin</a></div><a class="ps-blog__title" href="blog-post1.html">[PDF REPORT] – Impact of wearing masks on social behavior</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="ps-section__item">
+                        <div class="ps-blog--latset">
+                            <div class="ps-blog__thumbnail"><a href="blog-post1.html"><img src="/static/img/blog/blog11-496x262.jpg" alt="alt" /></a>
+                                <div class="ps-blog__badge"><span class="ps-badge__item">MEDIC</span><span class="ps-badge__item">PHARMACY</span><span class="ps-badge__item">SALE</span>
+                                </div>
+                            </div>
+                            <div class="ps-blog__content">
+                                <div class="ps-blog__meta"> <span class="ps-blog__date">May 18, 2021</span><a class="ps-blog__author" href="#">Alfredo Austin</a></div><a class="ps-blog__title" href="blog-post1.html">The latest tests of popular masks in accordance with CV2s standards</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="ps-section__item">
+                        <div class="ps-blog--latset">
+                            <div class="ps-blog__thumbnail"><a href="blog-post1.html"><img src="/static/img/blog/blog13-496x262.jpg" alt="alt" /></a>
+                                <div class="ps-blog__badge"><span class="ps-badge__item">MEDIC</span><span class="ps-badge__item">PHARMACY</span><span class="ps-badge__item">SALE</span>
+                                </div>
+                            </div>
+                            <div class="ps-blog__content">
+                                <div class="ps-blog__meta"> <span class="ps-blog__date">May 18, 2021</span><a class="ps-blog__author" href="#">Alfredo Austin</a></div><a class="ps-blog__title" href="blog-post1.html">The latest tests of popular masks in accordance with CV2s standards</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="ps-section__item">
+                        <div class="ps-blog--latset">
+                            <div class="ps-blog__thumbnail"><a href="blog-post1.html"><img src="/static/img/blog/blog12-496x262.jpg" alt="alt" /></a>
+                                <div class="ps-blog__badge"><span class="ps-badge__item">MEDIC</span><span class="ps-badge__item">PHARMACY</span><span class="ps-badge__item">SALE</span>
+                                </div>
+                            </div>
+                            <div class="ps-blog__content">
+                                <div class="ps-blog__meta"> <span class="ps-blog__date">May 18, 2021</span><a class="ps-blog__author" href="#">Alfredo Austin</a></div><a class="ps-blog__title" href="blog-post1.html">New special offer for customers who have been with us for 10 years</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section class="ps-section--newsletter mb-100" data-background="/static/img/newsletter-bg.jpg">
+            <h3 class="ps-section__title">Join our newsletter and get <br>&#8377;100 discount for your first order</h3>
+            <div class="ps-section__content">
+                <form action="do_action" method="post">
+                    <div class="ps-form--subscribe">
+                        <div class="ps-form__control">
+                            <input class="form-control ps-input" type="email" placeholder="Enter your email address">
+                            <button class="ps-btn ps-btn--warning">Subscribe</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </section>
+    </div>
+</div>
+{% endblock %}
+{% block contentScript %}
+{% comment %} my script here {% endcomment %}
+{% endblock%}

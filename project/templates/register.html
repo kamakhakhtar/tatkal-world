@@ -1,0 +1,65 @@
+{% extends 'includes/base.html' %}
+{% block head %}
+<title>Tatkal World | Trusted Software Provider </title>
+<meta name="description" content="A powerful and conceptual webapplication for authenticate irctc mobile verification via otp.">
+
+{% endblock %}
+{% block content%}
+<div class="ps-account">
+    <div class="container">
+        <div class="row">
+            <div class="col-12 col-md-6">
+                <form action="{% url 'register' %}" method="post">
+                    {% csrf_token %}
+                    <div class="ps-form--review">
+                        <h2 class="ps-form__title">Register</h2>
+
+                        <div class="ps-form__group">
+                            <div class="row">
+                                <div class="col-12 col-md-6">
+                                    <label class="ps-form__label">First Nmae *</label>
+                                    <input class="form-control" type="text" name="first_name" placeholder="First Name">
+                                </div>
+                                <div class="col-12 col-md-6">
+                                    <label class="ps-form__label">Last Nmae *</label>
+                                    <input class="form-control" type="text" name="last_name" placeholder="Last Name">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="ps-form__group">
+                            <label class="ps-form__label">Username *</label>
+                            <input class="form-control" type="text" name="username" placeholder="Username">
+                        </div>
+                        <div class="ps-form__group">
+                            <label class="ps-form__label">Email address *</label>
+                            <input class="form-control" name="email" type="email">
+                        </div>
+                        <div class="ps-form__group">
+                            <label class="ps-form__label">Password *</label>
+                            <div class="input-group">
+                                <input class="form-control" type="password" name="pass1" placeholder="Password">
+                                <div class="input-group-append"><a class="fa fa-eye-slash toogle-password" href="javascript: vois(0);"></a></div>
+                            </div>
+                            
+                        </div>
+                        <div class="ps-form__group">
+                            <label class="ps-form__label">Confirm Password *</label>
+                            <div class="input-group">
+                                <input class="form-control" type="password" name="pass2" placeholder="Confirm Password">
+                                <div class="input-group-append"><a class="fa fa-eye-slash toogle-password" href="javascript: vois(0);"></a></div>
+                            </div>
+                            <p class="ps-form__text">Hint: The password should be at least twelve characters long. To make it stronger, use upper and lower case letters, numbers, and symbols like ! " ? $ % ^ &amp; ).</p>
+                        </div>
+                        <div class="ps-form__submit">
+                            <button class="ps-btn ps-btn--warning">Register</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block contentScript %}
+{% comment %} my script here {% endcomment %}
+{% endblock%}

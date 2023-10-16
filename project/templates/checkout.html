@@ -1,0 +1,118 @@
+{% extends 'includes/base.html' %}
+{% block head %}
+<title>Tatkal World | Trusted Software Provider </title>
+<meta name="description" content="A powerful and conceptual webapplication for authenticate irctc mobile verification via otp.">
+
+{% endblock %}
+{% block content%}
+{% csrf_token %}
+<div class="ps-checkout">
+    <div class="container">
+        <ul class="ps-breadcrumb">
+            <li class="ps-breadcrumb__item"><a href="index.html">Home</a></li>
+            <li class="ps-breadcrumb__item active" aria-current="page"> Checkout</li>
+        </ul>
+        <h3 class="ps-checkout__title"> Checkout</h3>
+        <div class="ps-checkout__content">
+            <div class="ps-checkout__wapper">
+                <p class="ps-checkout__text">Returning customer? <a href="my-account.html">Click here to login</a></p>
+                <p class="ps-checkout__text">Have a coupon? <a href="shopping-cart.html">Click here to enter your code</a></p>
+            </div>
+            <form action="{% url 'place_order' %}" method="post">
+                {% csrf_token %}
+                <div class="row">
+                    <div class="col-12 col-lg-8">
+                        <div class="ps-checkout__form">
+                            <h3 class="ps-checkout__heading">Billing details</h3>
+                            <div class="row">
+                                <div class="col-12">
+                                    <div class="ps-checkout__group">
+                                        <label class="ps-checkout__label">Full Name*</label>
+                                        <input class="ps-input" type="text"  name="fullname">
+                                    </div>
+                                </div>
+                                <div class="col-12 col-md-6">
+                                    <div class="ps-checkout__group">
+                                        <label class="ps-checkout__label">Email Address *</label>
+                                        <input class="ps-input" type="email" name="email">
+                                    </div>
+                                </div>
+                                <div class="col-12 col-md-6">
+                                    <div class="ps-checkout__group">
+                                        <label class="ps-checkout__label">Phone number*</label>
+                                        <input class="ps-input" type="text" name="phone">
+                                    </div>
+                                </div>
+                                
+                                
+                                
+                               
+                              
+                              
+                                <div class="col-12">
+                                    <div class="ps-checkout__group">
+                                        <label class="ps-checkout__label">Order notes (optional)</label>
+                                        <textarea class="ps-textarea" rows="7" name="remark" placeholder="Notes about your order, e.g. special notes for delivery."></textarea>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-lg-4">
+                        <div class="ps-checkout__order">
+                            <h3 class="ps-checkout__heading">Your order</h3>
+                            <div class="ps-checkout__row">
+                                <div class="ps-title">Product</div>
+                                <div class="ps-title">Subtotal</div>
+                            </div>
+                            {% for key,value in request.session.cart.items %}
+                            <div class="ps-checkout__row ps-product">
+                                <div class="ps-product__name">{{value.name}} <span>{{value.quantity}}</span></div>
+                                {% load custom_filters %}
+
+                                <div class="ps-product__price">&#8377;{{ value.price|multiply:value.quantity }}</div>
+
+                            </div>
+                            {% endfor %}
+                            <div class="ps-checkout__row">
+                                <div class="ps-title">Subtotal</div>
+                                <div class="ps-product__price">&#8377;{{cart_total_amount}}</div>
+                            </div>
+                            
+                          
+                            <div class="ps-checkout__row">
+                                <div class="ps-title">Discount</div>
+                                <div class="ps-checkout__checkbox">
+                                    <div class="form">
+                                        
+                                        <label class="form-check-label" for="free-ship">14.98</label>
+                                    </div>
+                                    
+                                </div>
+                            </div>
+                            <div class="ps-checkout__row">
+                                <div class="ps-title">Total</div>
+                                <div class="ps-product__price">$814.85</div>
+                            </div>
+                            <div class="ps-checkout__payment">
+                                
+                                <div class="check-faq">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="agree-faq" checked="">
+                                        <label class="form-check-label" for="agree-faq"> I have read and agree to the website terms and conditions *</label>
+                                    </div>
+                                </div>
+                                <button class="ps-btn ps-btn--warning">Place order</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block contentScript %}
+{% comment %} my script here {% endcomment %}
+{% endblock%}

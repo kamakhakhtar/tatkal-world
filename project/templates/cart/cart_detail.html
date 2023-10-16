@@ -1,0 +1,186 @@
+{% extends 'includes/base.html' %}
+{% block head %}
+<title>Tatkal World | Trusted Software Provider </title>
+<meta name="description" content="A powerful and conceptual webapplication for authenticate irctc mobile verification via otp.">
+
+{% endblock %}
+{% block content%}
+{% csrf_token %}
+    
+
+<div class="ps-shopping">
+    <div class="container">
+        <ul class="ps-breadcrumb">
+            <li class="ps-breadcrumb__item"><a href="index.html">Home</a></li>
+            <li class="ps-breadcrumb__item active" aria-current="page">Shopping cart</li>
+        </ul>
+
+        {% if request.session.cart|length < 1 %}
+        <div class="ps-page--notfound mb-100">
+        <div class="ps-page__content">
+            <div class="row">
+                <div class="col-12 col-md-6 col-lg-5"><img src="/static/img/cartoon-doctor.jpg" alt="cartoon-doctor"></div>
+                <div class="col-12 col-md-6 col-lg-7">
+                    <h1 class="ps-page__name">OOPS</h1>
+                    <h5>Your cart is empty</h5>
+                    <p>Please back to product page or add product</p>
+                    <div><a class="ps-btn ps-btn--primary" href="{% url 'product' %}">Continue Shopping</a></div>
+                </div>
+            </div>
+        </div>
+    </div>
+        {%else%}
+        <h3 class="ps-shopping__title">Shopping cart<sup >(<span class="total-quantity">{{request.session.cart | length}}</span>)</sup></h3>
+        <div class="ps-shopping__content">
+            <div class="row">
+                <div class="col-12 col-md-7 col-lg-9">
+                    <ul class="ps-shopping__list">
+                        {% for key,value in request.session.cart.items %}
+                        <li>
+                            
+                            <div class="ps-product ps-product--wishlist">
+                                {% comment %} <div class="ps-product__remove"><a href="{% url 'item_clear' key %}"><%i class="icon-cross"></i></a></div> {% endcomment %}
+                                <div class="ps-product__thumbnail"><a class="ps-product__image" href="product1.html">
+                                        <figure><img src="{{value.image}}" alt="alt">
+                                        </figure>
+                                    </a></div>
+                                <div class="ps-product__content">
+                                    <h5 class="ps-product__title"><a href="product1.html">{{value.name}}</a></h5>
+                                    <div class="ps-product__row">
+                                        <div class="ps-product__label">Price:</div>
+                                        <div class="ps-product__value"><span class="ps-product__price">${{value.price}}</span>
+                                        </div>
+                                    </div>
+                                    <div class="ps-product__row ps-product__stock">
+                                        <div class="ps-product__label">Stock:</div>
+                                        <div class="ps-product__value"><span class="ps-product__in-stock">In Stock</span>
+                                        </div>
+                                    </div>
+                                    <div class="ps-product__cart">
+                                        <button class="ps-btn">Add to cart</button>
+                                    </div>
+                                    <div class="ps-product__row ps-product__quantity">
+                                        <div class="ps-product__label">Quantity:</div>
+                                        <div class="ps-product__value">1</div>
+                                    </div>
+                                    <div class="ps-product__row ps-product__subtotal">
+                                        <div class="ps-product__label">Subtotal:</div>
+                                        <div class="ps-product__value">$399.99</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                    <div class="ps-shopping__table">
+                        <table class="table ps-table ps-table--product">
+                            <thead>
+                                <tr>
+                                    <th class="ps-product__remove"></th>
+                                    <th class="ps-product__thumbnail"></th>
+                                    <th class="ps-product__name">Product name</th>
+                                    <th class="ps-product__meta">Unit price</th>
+                                    <th class="ps-product__quantity">Quantity</th>
+                                    <th class="ps-product__subtotal">Subtotal</th>
+                                </tr>
+                            </thead>
+                            <tbody id="cart-body">
+                                {% for key,value in request.session.cart.items %}
+                                <tr id="cart-item-{{value.product_id}}">
+                                    <td class="ps-product__remove"> <a data-id="{{value.product_id}}" class="clear-item" href="#"><i class="icon-cross"></i></a></td>
+                                    <td class="ps-product__thumbnail"><a class="ps-product__image" href="product1.html">
+                                            <figure><img src=" {{value.image}} " alt=""></figure>
+                                        </a></td>
+                                    <td class="ps-product__name"> <a href="{{value.variant}}">{{value.name}} </a></td>
+                                    <td class="ps-product__meta"> <span class="ps-product__price">&#8377; {{value.price}}</span>
+                                    </td>
+                                    
+                                    <td class="ps-product__quantity">
+                                        <div class="def-number-input number-input safari_only">
+                                            <button class="minus" data-id="{{value.product_id}}"><i class="icon-minus"></i></button>
+                                            <input class="quantity" min="0" name="quantity" id="quantity-{{ value.product_id  }}"  value="{{value.quantity}}" type="number">
+                                            <button class="plus" data-id="{{value.product_id}}"><i class="icon-plus"></i></button>
+                                        </div>
+                                    </td>
+                                    <td class="ps-product__subtotal sub-total-{{value.product_id}}"  >&#8377; </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="ps-shopping__footer">
+                        <div class="ps-shopping__coupon">
+                            <input class="form-control ps-input" type="text" placeholder="Coupon code">
+                            <button class="ps-btn ps-btn--primary" type="button">Apply coupon</button>
+                        </div>
+                        <div class="ps-shopping__button">
+                            <button class="ps-btn ps-btn--primary clear-all" type="button">Clear All</button>
+                            <button class="ps-btn ps-btn--primary" type="button">Update cart</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 col-md-5 col-lg-3">
+                    <div class="ps-shopping__label">Cart totals</div>
+                    <div class="ps-shopping__box">
+                        <div class="ps-shopping__row">
+                            <div class="ps-shopping__label">Subtotal</div>
+                            <div class="ps-shopping__price subtotal" >{{cart_total_amount}}</div>
+                        </div>
+                        <div class="ps-shopping__row">
+                            <div class="ps-shopping__label">Discount</div>
+                            <div class="ps-shopping__price">&#8377; 0</div>
+                        </div>
+                        <div class="ps-shopping__label">Free Shipping</div>
+                        <div class="ps-shopping__checkbox">
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" id="cart-free-ship" checked="">
+                                <label class="form-check-label" for="cart-free-ship">Free shipping</label>
+                            </div>
+                          
+                        </div>
+                        
+                        <div class="ps-shopping__form">
+                            <div class="ps-shopping__group">
+                                <select class="js-example-basic-single select2-hidden-accessible" name="state" data-select2-id="1" tabindex="-1" aria-hidden="true">
+                                    <option selected="" data-select2-id="3">Select a country / region…</option>
+                                    <option>Afghanistan</option>
+                                    <option>Åland Islands</option>
+                                    <option>Albania</option>
+                                    <option>Andorra</option>
+                                    <option>American Samoa</option>
+                                    <option>Andorra</option>
+                                </select><span class="select2 select2-container select2-container--default" dir="ltr" data-select2-id="2" style="width: auto;"><span class="selection"><span class="select2-selection select2-selection--single" role="combobox" aria-haspopup="true" aria-expanded="false" tabindex="0" aria-labelledby="select2-state-qy-container"><span class="select2-selection__rendered" id="select2-state-qy-container" role="textbox" aria-readonly="true" title="Select a country / region…">Select a country / region…</span><span class="select2-selection__arrow" role="presentation"><b role="presentation"></b></span></span></span><span class="dropdown-wrapper" aria-hidden="true"></span></span>
+                            </div>
+                            <div class="ps-shopping__group">
+                                <input class="form-control ps-input" type="text" placeholder="County">
+                            </div>
+                            <div class="ps-shopping__group">
+                                <input class="form-control ps-input" type="text" placeholder="Town / City">
+                            </div>
+                            <div class="ps-shopping__group">
+                                <input class="form-control ps-input" type="text" placeholder="Postcode">
+                            </div>
+                        </div>
+                        <div class="ps-shopping__row">
+                            <div class="ps-shopping__label">Total</div>
+                            <div class="ps-shopping__price" id="total"></div>
+                        </div>
+                        <div class="ps-shopping__checkout ">                       
+                            
+                            <a class="ps-btn ps-btn--warning" href="{%url 'place_order' %}">Proceed to checkout</a>
+                            <a class="ps-shopping__link" href="category-list.html">Continue To Shopping</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+           
+        </div>
+        {%endif%}
+
+    </div>
+</div>
+{% endblock %}
+{% block contentScript %}
+{% comment %} my script here {% endcomment %}
+
+{% endblock%}
