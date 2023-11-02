@@ -13,11 +13,18 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+
 from django.contrib import admin
 from django.urls import path,include
 from django.conf import settings
 from django.conf.urls.static import static
 from . import views
+from django.shortcuts import render
+from django.conf.urls import handler404
+
+
+def custom_404(request, exception):
+    return render(request, '404.html', status=404)
 
 
 urlpatterns = [
@@ -38,7 +45,8 @@ urlpatterns = [
     path('register/', views.register, name='register'),
     path('login/', views.Handellogin, name='login'),
     path('logout/', views.HandelLogout, name='logout'),
-
+    path('thank-you/', views.thankyou, name='thankyou'),
+    
     # Cart
     path('cart/add/<str:id>/<str:variant>/', views.cart_add, name='cart_add'),
     path('cart/item_clear/<str:id>/', views.item_clear, name='item_clear'),
@@ -50,5 +58,11 @@ urlpatterns = [
     path('create-order/', views.create_order, name='create_order'),
     path('place-order/', views.place_order, name='place_order'),
     path('check-order-status/', views.check_order, name='check_order_status'),
+    path('apply-coupon/', views.apply_coupon, name='apply_coupon'),
 
 ] + static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT)
+
+handler404 = custom_404
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

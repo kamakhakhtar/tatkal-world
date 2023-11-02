@@ -33,13 +33,10 @@
                     <div class="container container-initial">
                         <div class="ps-banner__block">
                             <div class="ps-banner__content">
-                                <h2 class="ps-banner__title">Fully equipped <br/> of ophthalmic rooms</h2>
+                                <h2 class="ps-banner__title">Full Verified <br/> & Unverified ID</h2>
                                 <div class="ps-banner__desc">Only in this week. Don’t misss!</div>
-                                <div class="ps-banner__btn-group">
-                                    <div class="ps-banner__btn"><img src="/static/img/icon/bacterial.svg" alt="alt" />Anti-Bacterial</div>
-                                    <div class="ps-banner__btn"><img src="/static/img/icon/virus.svg" alt="alt" />Anti-Virus</div>
-                                </div><a class="bg-warning ps-banner__shop" href="#">Shop now</a>
-                                <div class="ps-banner__persen bg-yellow ps-top"><small>only</small>$25</div>
+                                <a class="bg-warning ps-banner__shop" href="#">Shop now</a>
+                                <div class="ps-banner__persen bg-yellow ps-top"><small>only</small>&#8377;45</div>
                             </div>
                             <div class="ps-banner__thumnail"><img class="ps-banner__round" src="/static/img/round2.png" alt="alt" /><img class="ps-banner__image" src="/static/img/promotion/slide5.jpg" alt="alt" />
                             </div>
@@ -50,11 +47,11 @@
                     <div class="container-no-round">
                         <div class="ps-banner__block">
                             <div class="ps-banner__content">
-                                <h2 class="ps-banner__title text-white">Antibacterial <br/> Medical Mask</h2>
+                                <h2 class="ps-banner__title text-white">Windows <br/> and Linux VPS</h2>
                                 <div class="ps-banner__desc text-white">Only in this week. Don’t misss!</div>
                                 <div class="ps-banner__btn-group">
-                                    <div class="ps-banner__btn text-warning"><img src="/static/img/icon/bacterial.svg" alt="alt" style="filter: invert(60%) sepia(75%) saturate(1000%) hue-rotate(360deg) brightness(100%) contrast(100%);" />Anti-Bacterial</div>
-                                    <div class="ps-banner__btn text-warning"><img src="/static/img/icon/virus.svg" alt="alt" style="filter: invert(60%) sepia(75%) saturate(1000%) hue-rotate(360deg) brightness(100%) contrast(100%);" />Anti-Virus</div>
+                                    <div class="ps-banner__btn text-warning"><img src="/static/img/icon/bacterial.svg" alt="alt" style="filter: invert(60%) sepia(75%) saturate(1000%) hue-rotate(360deg) brightness(100%) contrast(100%);" />99 % Uptime</div>
+                                    <div class="ps-banner__btn text-warning"><img src="/static/img/icon/virus.svg" alt="alt" style="filter: invert(60%) sepia(75%) saturate(1000%) hue-rotate(360deg) brightness(100%) contrast(100%);" />24X7 Customer Support</div>
                                 </div><a class="bg-warning ps-banner__shop" href="#">Add to cart</a>
                                 <div class="ps-banner__persen bg-warning ps-left">-30%</div>
                             </div>
@@ -165,30 +162,30 @@
                 <div class="col-12 col-md-4">
                     <div class="ps-promo__item"><img class="ps-promo__banner" src="/static/img/promotion/bg-banner6.jpg" alt="alt" />
                         <div class="ps-promo__content">
-                            <h4 class="ps-promo__name">Get rid <br/>of bacteria <br/>in your home</h4>
-                            <div class="ps-promo__sale text-primary">-7%</div><a class="ps-promo__btn" href="category-grid.html">Shop now</a>
+                            <h4 class="ps-promo__name">Get best <br/>Tatkal Sofware <br/>at discount</h4>
+                            <div class="ps-promo__sale text-primary">-10%</div><a class="ps-promo__btn" href="category-grid.html">Shop now</a>
                         </div>
                     </div>
                 </div>
                 <div class="col-12 col-md-4">
                     <div class="ps-promo__item"><img class="ps-promo__banner" src="/static/img/promotion/bg-banner7.jpg" alt="alt" />
                         <div class="ps-promo__content"><span class="ps-promo__badge">New</span>
-                            <h4 class="mb-20 ps-promo__name">SuperBrush <br/>X200 Higenic <br/>ProMaster</h4><a class="ps-promo__btn" href="category-grid.html">More</a>
+                            <h4 class="mb-20 ps-promo__name">IRCTC ID <br/>Unerified &<br/>Verified</h4><a class="ps-promo__btn" href="category-grid.html">Shop now</a>
                         </div>
                     </div>
                 </div>
                 <div class="col-12 col-md-4">
                     <div class="ps-promo__item"><img class="ps-promo__banner" src="/static/img/promotion/bg-banner8.jpg" alt="alt" />
                         <div class="ps-promo__content">
-                            <h4 class="text-white ps-promo__name">Hubble <br/>Eye <br/>Lenses</h4>
+                            <h4 class="text-white ps-promo__name">99% <br/>Uptime <br/>VPS Server</h4>
                             <div class="ps-promo__sale text-yellow">-12%</div><a class="ps-promo__btn" href="category-grid.html">Shop now</a>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        <section class="ps-section--featured mb-100">
-            <h3 class="ps-section__title">Featured products</h3>
+        <section class="ps-section--featured mb-100">{% load custom_filters%}
+            <h3 class="ps-section__title">Featured products {{ 'kamran' |capitalize_first_letter }}</h3>
             <div class="ps-section__content">
                 <div class="row m-0">
 
@@ -244,7 +241,7 @@
                 <div class="ps-shop__more"><a href="#">Show all</a></div>
             </div>
         </section>
-        <section class="ps-section--blog mb-100">
+        {% comment %} <section class="ps-section--blog mb-100">
             <h3 class="ps-section__title">From the blog</h3>
             <div class="ps-section__carousel">
                 <div class="owl-carousel" data-owl-auto="false" data-owl-loop="true" data-owl-speed="13000" data-owl-gap="0" data-owl-nav="true" data-owl-dots="true" data-owl-item="3" data-owl-item-xs="1" data-owl-item-sm="1" data-owl-item-md="2" data-owl-item-lg="3" data-owl-item-xl="3" data-owl-duration="1000" data-owl-mousedrag="on">
@@ -294,7 +291,7 @@
                     </div>
                 </div>
             </div>
-        </section>
+        </section> {% endcomment %}
         <section class="ps-section--newsletter mb-100" data-background="/static/img/newsletter-bg.jpg">
             <h3 class="ps-section__title">Join our newsletter and get <br>&#8377;100 discount for your first order</h3>
             <div class="ps-section__content">

@@ -6,7 +6,7 @@
 {% endblock %}
 {% block content%}
 {% csrf_token %}
-    
+{% load custom_filters%}    
 
 <div class="ps-shopping">
     <div class="container">
@@ -16,12 +16,12 @@
         </ul>
 
         {% if request.session.cart|length < 1 %}
-        <div class="ps-page--notfound mb-100">
+        <div class="ps-page--notfound mb-100 mt-30">
         <div class="ps-page__content">
             <div class="row">
-                <div class="col-12 col-md-6 col-lg-5"><img src="/static/img/cartoon-doctor.jpg" alt="cartoon-doctor"></div>
+                <div class="col-12 col-md-6 col-lg-5"><img src="/static/img/empty-cart.jpg" alt="cartoon-doctor"></div>
                 <div class="col-12 col-md-6 col-lg-7">
-                    <h1 class="ps-page__name">OOPS</h1>
+                    <h1 class="ps-page__name-thankyou">EMPTY</h1>
                     <h5>Your cart is empty</h5>
                     <p>Please back to product page or add product</p>
                     <div><a class="ps-btn ps-btn--primary" href="{% url 'product' %}">Continue Shopping</a></div>
@@ -39,13 +39,13 @@
                         <li>
                             
                             <div class="ps-product ps-product--wishlist">
-                                {% comment %} <div class="ps-product__remove"><a href="{% url 'item_clear' key %}"><%i class="icon-cross"></i></a></div> {% endcomment %}
-                                <div class="ps-product__thumbnail"><a class="ps-product__image" href="product1.html">
+                                <div class="ps-product__remove"><a href="{% url 'item_clear' key %}"><%i class="icon-cross"></i></a></div>
+                                <div class="ps-product__thumbnail"><a class="ps-product__image" href="/product/{{value.product_id|product_slug}}">
                                         <figure><img src="{{value.image}}" alt="alt">
                                         </figure>
                                     </a></div>
                                 <div class="ps-product__content">
-                                    <h5 class="ps-product__title"><a href="product1.html">{{value.name}}</a></h5>
+                                    <h5 class="ps-product__title"><a href="/product/{{value.product_id|product_slug}}">{{value.name}}</a></h5>
                                     <div class="ps-product__row">
                                         <div class="ps-product__label">Price:</div>
                                         <div class="ps-product__value"><span class="ps-product__price">${{value.price}}</span>
@@ -88,10 +88,10 @@
                                 {% for key,value in request.session.cart.items %}
                                 <tr id="cart-item-{{value.product_id}}">
                                     <td class="ps-product__remove"> <a data-id="{{value.product_id}}" class="clear-item" href="#"><i class="icon-cross"></i></a></td>
-                                    <td class="ps-product__thumbnail"><a class="ps-product__image" href="product1.html">
+                                    <td class="ps-product__thumbnail"><a class="ps-product__image" href="/product/{{value.product_id|product_slug}}">
                                             <figure><img src=" {{value.image}} " alt=""></figure>
                                         </a></td>
-                                    <td class="ps-product__name"> <a href="{{value.variant}}">{{value.name}} </a></td>
+                                    <td class="ps-product__name"> <a href="/product/{{value.product_id|product_slug}}">{{value.name}} </a></td>
                                     <td class="ps-product__meta"> <span class="ps-product__price">&#8377; {{value.price}}</span>
                                     </td>
                                     
@@ -102,17 +102,14 @@
                                             <button class="plus" data-id="{{value.product_id}}"><i class="icon-plus"></i></button>
                                         </div>
                                     </td>
-                                    <td class="ps-product__subtotal sub-total-{{value.product_id}}"  >&#8377; </td>
+                                    <td class="ps-product__subtotal sub-total-{{value.product_id}}">&#8377;</td>
                                 </tr>
                                 {% endfor %}
                             </tbody>
                         </table>
                     </div>
                     <div class="ps-shopping__footer">
-                        <div class="ps-shopping__coupon">
-                            <input class="form-control ps-input" type="text" placeholder="Coupon code">
-                            <button class="ps-btn ps-btn--primary" type="button">Apply coupon</button>
-                        </div>
+                        
                         <div class="ps-shopping__button">
                             <button class="ps-btn ps-btn--primary clear-all" type="button">Clear All</button>
                             <button class="ps-btn ps-btn--primary" type="button">Update cart</button>
@@ -124,12 +121,12 @@
                     <div class="ps-shopping__box">
                         <div class="ps-shopping__row">
                             <div class="ps-shopping__label">Subtotal</div>
-                            <div class="ps-shopping__price subtotal" >{{cart_total_amount}}</div>
+                            <div class="ps-shopping__price subtotal" >&#8377; {{total}}</div>
                         </div>
-                        <div class="ps-shopping__row">
+                        {% comment %} <div class="ps-shopping__row">
                             <div class="ps-shopping__label">Discount</div>
-                            <div class="ps-shopping__price">&#8377; 0</div>
-                        </div>
+                            <div class="ps-shopping__price">&#8377; {{total}}</div>
+                        </div> {% endcomment %}
                         <div class="ps-shopping__label">Free Shipping</div>
                         <div class="ps-shopping__checkbox">
                             <div class="form-check">
@@ -168,7 +165,7 @@
                         <div class="ps-shopping__checkout ">                       
                             
                             <a class="ps-btn ps-btn--warning" href="{%url 'place_order' %}">Proceed to checkout</a>
-                            <a class="ps-shopping__link" href="category-list.html">Continue To Shopping</a>
+                            <a class="ps-shopping__link" href="/products/">Continue To Shopping</a>
                         </div>
                     </div>
                 </div>

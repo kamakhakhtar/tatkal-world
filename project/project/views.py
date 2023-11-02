@@ -1,5 +1,5 @@
 # ========= DJANGO ===========
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from django.shortcuts import get_object_or_404
@@ -21,6 +21,7 @@ from datetime import datetime
 
 # ========= MONGO DB =========
 from pymongo import MongoClient
+import re
 
 # ==== Variable Values ====
 
@@ -44,10 +45,9 @@ temp_number_collection =db['tempnumber']
 
 # ========== Login View ======================
 def main_page(request):
-     product = Product.objects.filter(status='Publish')
-    
+     products = Product.objects.filter(status='Publish').order_by('?')[:10]    
      context = {
-          'product':product,
+          'product':products,
      }
      return render(request, 'index.html', context)
 
@@ -90,36 +90,70 @@ def search(request):
     return render(request, 'search.html',context)
 
 def single_product(request, uid):
-    product = Product.objects.filter(slug=uid).first()
-    variant_price = 0
-    if request.method == 'GET':    
-     variant_name = request.GET.get('variant')  # Use 'variant' instead of 'variant_name'
-     # Check if variant_name is provided in GET data
-     if variant_name:
-          # Get the variant price based on the variant name
-          variant = product.varient_set.filter(name__name=variant_name).first()
-          if variant:
-               variant_price = variant.price
-               #   print(variant_price)
-               # Calculate total price by adding base price and variant price
-               total_price = product.price + variant_price
-               #   print(total_price)
-     else:
-          # If no variant is selected, the total price is just the base price
-          total_price = product.price
+#     product = Product.objects.filter(slug=uid).first()
+     product = get_object_or_404(Product, slug=uid)
+     products = Product.objects.filter(status='Publish').order_by('?')[:10]    
 
-    context = {
-        'prod': product,
-        'total_price': total_price
-    }
-    return render(request, 'single-product.html', context)
+     seo_data = product.seo
+     variant_price = 0
+     if request.method == 'GET':    
+          variant_name = request.GET.get('variant')  # Use 'variant' instead of 'variant_name'
+          # Check if variant_name is provided in GET data
+          if variant_name:
+               # Get the variant price based on the variant name
+               variant = product.varient_set.filter(name__name=variant_name).first()
+               if variant:
+                    variant_price = variant.price
+                    #   print(variant_price)
+                    # Calculate total price by adding base price and variant price
+                    total_price = product.price + variant_price
+                    #   print(total_price)
+          else:
+               # If no variant is selected, the total price is just the base price
+               total_price = product.price
+
+     context = {
+          'prod': product,
+          'seo_data': seo_data,
+          'total_price': total_price,
+          'product':products
+     }
+     print(seo_data)
+     return render(request, 'single-product.html', context)
 
 
 def shopping_cart(request):
      return render(request, 'cart.html')
 
 def checkout(request):
-     return render(request, 'checkout.html')
+     cart = Cart(request)
+     subtotal = sum(int(item['quantity']) * int(item['price']) for item in cart.cart.values())
+     msg =""
+     discount_code = request.session.get('discount_code')
+     if discount_code:
+          code =discount_code
+     discount_percentage = request.session.get('discount_percentage', 0.0)  # Default to 0 if not found
+     
+     print(discount_code, discount_percentage)
+     
+     # Check if the discount code is valid and set the discount percentage accordingly
+     if discount_code == 'BIG10':
+          discount_percentage = 0.10  # 10% discount for BIG10 code
+     elif discount_code == 'BIG15':
+          discount_percentage = 0.15
+
+     discount = subtotal * discount_percentage
+     if(discount >2):
+         msg = f"Coupon Applied {discount_code}" 
+     total = subtotal - discount
+     context = {
+        'subtotal': subtotal,
+        'total':total,
+        'discount':discount,
+        'code':msg,
+        'discount_code':discount_code
+    }
+     return render(request, 'checkout.html',context)
 
 def about_us(request):
      return render(request, 'about-us.html')
@@ -204,12 +238,15 @@ def blog_single(request):
 def blogs(request):
      return render(request, 'blogs.html')
 
+def thankyou(request):
+     return render(request, 'thank-you.html')
+
 # @login_required(login_url="/login/")
 def cart_add(request, id, variant):
     
      cart = Cart(request)     
      product = Product.objects.get(id=id)
-     
+     print(product.slug)
      if variant != 'null':
           id = id + "-"+ variant
           p_name = f"{product.name} {variant} PNR"
@@ -222,14 +259,26 @@ def cart_add(request, id, variant):
                # Update the product price with the variant price
                product.price = variant.price + product.price
                product.id = id
-               product.name = p_name     
-
+               product.name = p_name   
+                 
      cart.add(product=product)
      items = len(cart.cart)
      total_subtotal = sum(int(item['quantity']) * int(item['price']) for item in cart.cart.values())
+     
+     # Serialize cart items
+     cart_items = []
+     for item_id, item_details in cart.cart.items():
+          cart_items.append({
+               'product_id': item_id,
+               'name': item_details['name'],
+               'image': item_details['image'],  # Add other necessary fields
+               'quantity': item_details['quantity'],
+               'price': item_details['price'],  # Add the product price if needed
+          })
      return JsonResponse({
           'success': True,
           'item': items,
+          'cart_items': cart_items,  # Include serialized cart items
           # 'variant': variant_name,
           'total_subtotal': total_subtotal,  # Include total_subtotal in the response
           })
@@ -254,10 +303,20 @@ def item_clear(request, id):
      cart.remove(product)
 
      total_subtotal = sum(int(item['quantity']) * int(item['price']) for item in cart.cart.values())
+     cart_items = []
+     for item_id, item_details in cart.cart.items():
+          cart_items.append({
+               'product_id': item_id,
+               'name': item_details['name'],
+               'image': item_details['image'],  # Add other necessary fields
+               'quantity': item_details['quantity'],
+               'price': item_details['price'],  # Add the product price if needed
+          })
      #     return redirect("cart_detail")
      return JsonResponse({
           'success': True,
           'total_subtotal': total_subtotal,  # Include total_subtotal in the response
+          'cart_items': cart_items,  # Include serialized cart items
           })
 
 
@@ -283,11 +342,21 @@ def item_increment(request, id):
      # Calculate sub_total for the current item
      sub_total = int(cart_item['quantity']) * int(product.price)
      total_subtotal = sum(int(item['quantity']) * int(item['price']) for item in cart.cart.values())
+     cart_items = []
+     for item_id, item_details in cart.cart.items():
+          cart_items.append({
+               'product_id': item_id,
+               'name': item_details['name'],
+               'image': item_details['image'],  # Add other necessary fields
+               'quantity': item_details['quantity'],
+               'price': item_details['price'],  # Add the product price if needed
+          })
      return JsonResponse({
           'success': True,
           'new_quantity': cart_item['quantity'],
           'total_quantity': total_quantity,
           'sub_total': sub_total,
+          'cart_items': cart_items,  # Include serialized cart items
           'total_subtotal': total_subtotal  # Include total_subtotal in the response
      })
 
@@ -311,10 +380,20 @@ def item_decrement(request, id):
      total_quantity = len(cart.cart)
      sub_total = int(cart_item['quantity']) * int(product.price)
      total_subtotal = sum(int(item['quantity']) * int(item['price']) for item in cart.cart.values())
+     cart_items = []
+     for item_id, item_details in cart.cart.items():
+          cart_items.append({
+               'product_id': item_id,
+               'name': item_details['name'],
+               'image': item_details['image'],  # Add other necessary fields
+               'quantity': item_details['quantity'],
+               'price': item_details['price'],  # Add the product price if needed
+          })
      return JsonResponse({
           'success': True,
           'new_quantity': cart_item['quantity'],
           'total_quantity': total_quantity,
+          'cart_items': cart_items,  # Include serialized cart items
           'sub_total': sub_total,
           'total_subtotal': total_subtotal  # Include total_subtotal in the response
      })
@@ -329,10 +408,28 @@ def cart_clear(request):
 
 # @login_required(login_url="/login/")
 def cart_detail(request):
-    return render(request, 'cart/cart_detail.html')
+    cart = Cart(request)
+    total_subtotal = sum(int(item['quantity']) * int(item['price']) for item in cart.cart.values())
+    
+    context = {'total': total_subtotal }
+    return render(request, 'cart/cart_detail.html',context)
 
-
+# @login_required(login_url="/login/")
 def place_order(request):
+     error =""
+     cart = Cart(request)
+     discount_code = request.session.get('discount_code')
+     discount_percentage = request.session.get('discount_percentage', 0.0)  # Default to 0 if not found
+     
+     print(discount_code, discount_percentage)
+     
+     # Check if the discount code is valid and set the discount percentage accordingly
+     if discount_code == 'BIG10':
+          discount_percentage = 0.10  # 10% discount for BIG10 code
+     elif discount_code == 'BIG15':
+          discount_percentage = 0.15  # 15% discount for ANOTHERCODE (example)
+
+     
      # Get the current date and time with microsecond precision
      current_time = datetime.now()
 
@@ -353,20 +450,27 @@ def place_order(request):
      # Generate a unique ID using the current date and time
      unique_id = current_time.strftime("%Y%m%d%H%M%S%f")  # YearMonthDayHourMinuteSecondMicrosecond
      cart = request.session.get('cart')
-     total =0
+     subtotal =0
      productinfo =""
      for i in cart:
           a = cart[i]['price']
           b = cart[i]['quantity']      
           n = cart[i]['name']      
-          total = total + int(a)*b
+          subtotal = subtotal + int(a)*b
           productinfo += f"{n},"
-          
-     print(productinfo)
+
+
+
+     discount = subtotal * discount_percentage
+     total = subtotal - discount
+
      if request.method == 'POST':
-          
-          uid = request.session.get('_auth_user_id')
-          user = User.objects.get(id =uid)
+          if not request.user.is_authenticated:
+               error = 'Please login to proceed'
+          else:
+               uid = request.session.get('_auth_user_id')
+               user = User.objects.get(id =uid)
+               
           fullname = request.POST.get('fullname')
           email = request.POST.get('email')
           phone = request.POST.get('phone')
@@ -374,61 +478,95 @@ def place_order(request):
           product_info = productinfo
           amount = total
           payment_id = unique_id
-         
-          order = Order(
-               user = user,
-               fullname = fullname,
-               email = email,
-               phone = phone,
-               additional_info = remark,
-               product_info = product_info,
-               amount = amount,
-               payment_id = payment_id
-          )
-          order.save()
-          for i in cart:
-               a =  (int(cart[i]['price']))
-               b = cart[i]['quantity']
-              
+          # Validate phone number (10 digits)
+          if not re.match(r'^[1-9][0-9]{9}$', phone):
+               error = 'Invalid phone number'
 
-               total = a*b
+          # Validate email
+          if not re.match(r'^[^\s@]+@[^\s@]+\.[^\s@]+$', email):
+               error = 'Invalid email address'
 
-               item = OrderItem (
-                    Order= order,
+          # Validate full name (not empty)
+          if not fullname:
+               error = 'Full name is required'
+          
+
+          if(error == ""):
+               order = Order(
+                    user = user,
+                    fullname = fullname,
+                    email = email,
+                    phone = phone,
+                    additional_info = remark,
+                    product_info = product_info,
+                    amount = amount,
+                    payment_id = payment_id
+               )
+               order.save()
+               for i in cart:
                     product = cart[i]['name'],
                     image = cart[i]['image'],
                     quantity = cart[i]['quantity'],
-                    price = cart[i]['price'],
-                    total = total
-               )
-               item.save()
-          api_url = "https://api.ekqr.in/api/create_order"
-          post_data = {
-               "key": "6fffda11-f596-4856-8a3c-69e5bb6641ea",
-               "client_txn_id": str(payment_id),
-               "amount": "1",
-               "p_info": product_info,
-               "customer_name": fullname,
-               "customer_email": email,
-               "customer_mobile": phone,
-               "redirect_url": redirect_url
+               
 
-          }
+                    total = a*b
 
-          try:
-               response = requests.post(api_url, json=post_data)
+                    item = OrderItem (
+                         Order= order,
+                         product = cart[i]['name'],
+                         image = cart[i]['image'],
+                         quantity = cart[i]['quantity'],
+                         price = cart[i]['price'],
+                         total = total
+                    )
+                    item.save()
+               api_url = "https://api.ekqr.in/api/create_order"
+               post_data = {
+                    "key": "6fffda11-f596-4856-8a3c-69e5bb6641ea",
+                    "client_txn_id": str(payment_id),
+                    "amount": "1",
+                    "p_info": product_info,
+                    "customer_name": fullname,
+                    "customer_email": email,
+                    "customer_mobile": phone,
+                    "redirect_url": redirect_url
 
-               if response.status_code == 200:
-                    api_response = response.json()
-                    if 'payment_url' in api_response['data']:
-                         payment_url = api_response['data']['payment_url']
-                         return redirect(payment_url)
-                    else:
-                         return JsonResponse({"error": "Payment URL not found in API response"}, status=500)
-          except Exception as e:
-               return JsonResponse({"error": str(e)}, status=500)
-         
-     return render(request, 'checkout.html')
+               }
+
+               try:
+                    response = requests.post(api_url, json=post_data)
+
+                    if response.status_code == 200:
+                         api_response = response.json()
+                         if 'payment_url' in api_response['data']:
+                              payment_url = api_response['data']['payment_url']
+                              return redirect(payment_url)
+                         else:
+                              return JsonResponse({"error": "Payment URL not found in API response"}, status=500)
+               except Exception as e:
+                    return JsonResponse({"error": str(e)}, status=500)
+     
+     # Create a list of cart items as dictionaries
+     cart_items = []
+     for item_id, item_details in cart.items():
+          product = item_details['name']
+          image = item_details['image']
+          quantity = item_details['quantity']
+          cart_items.append({
+               'product': product,
+               'image': image,
+               'quantity': quantity,
+          })
+
+     context = {
+        'subtotal': subtotal,
+        'total':total,
+        'discount':discount,   
+        'cart_items': cart_items,
+        'error':error     
+    }
+     
+     return render(request, 'checkout.html', context)
 
 
 def create_order(request,payment_id="343534433532443", amount="1", product_info="2342sffd", fullname="ssf sdfsd", email="Sfd@sdf.com", phone="8743022455"):
@@ -486,13 +624,17 @@ def check_order(request):
 
         # Check if the request was successful (status code 200)
         if response.status_code == 200:
+            
             # Parse the JSON response from the API
             api_response = response.json()
+            cart = Cart(request)
+            cart.clear()
 
             # Check if the status is "success"
             if api_response.get("data") and api_response.get("data").get("status") == "success":
                orders_to_update = Order.objects.filter(payment_id=client_txn_id)
                orders_to_update.update(paid=True)
+            return render(request, 'thank-you.html')
             # Return the API response as JSON
           #   return JsonResponse(api_response)
         else:
@@ -501,3 +643,33 @@ def check_order(request):
     except Exception as e:
         # Handle exceptions, such as network errors or timeouts
         return JsonResponse({"error": str(e)}, status=500)
+    
+def apply_coupon(request):
+    cart = Cart(request)
+    subtotal = sum(int(item['quantity']) * int(item['price']) for item in cart.cart.values())
+    discount_code = request.GET.get('discount_code')  # Get discount code from the request
+    discount_percentage = 0.10  # Default discount percentage
+
+    # Check if the discount code is valid and set the discount percentage accordingly
+    if discount_code == 'BIG10':
+        discount_percentage = 0.10  # 10% discount for BIG10 code
+    elif discount_code == 'BIG15':
+        discount_percentage = 0.15  # 15% discount for ANOTHERCODE (example)
+
+    discount = subtotal * discount_percentage
+    total = subtotal - discount
+    
+    if(discount >2):
+         msg = f"Coupen Applied {discount_code}" 
+    # Store discount code and percentage in session
+    request.session['discount_code'] = discount_code
+    request.session['discount_percentage'] = discount_percentage
+    print(msg)
+    return JsonResponse({
+        'success': True,
+        'msg': msg,
+        'subtotal': subtotal,
+        'total': total,
+        'discount': discount,
+    })
+

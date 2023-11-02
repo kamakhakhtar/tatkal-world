@@ -2,6 +2,17 @@ from django.db import models
 from django.utils import timezone
 from django.contrib.auth.models import User
 
+    
+class SEO(models.Model):
+    title = models.CharField(max_length=200)
+    description = models.TextField()
+    keywords = models.CharField(max_length=200)
+    # Add any other SEO-related fields here
+
+    def __str__(self):
+        return self.title
+
+
 # Create your models here.
 class Categories(models.Model):
     name = models.CharField(max_length=200)
@@ -58,6 +69,7 @@ class Product(models.Model):
         ('Draft', 'Draft'),
     )
     unique_id = models.CharField(unique=True, max_length=200, null=True, blank=True)
+    seo = models.OneToOneField(SEO, on_delete=models.CASCADE, null=True, blank=True)
     slug = models.SlugField(max_length=200, null=True)
     image = models.ImageField(upload_to="product_images/img")
     name = models.CharField(max_length=200)
@@ -73,8 +85,7 @@ class Product(models.Model):
     filter_price = models.ForeignKey(Filter_Price, on_delete=models.CASCADE)
 
     def save(self, *args, **kwargs):
-
-        total_price = self.price
+        total_price = 0  # Initialize total_price to 0
 
         # Check if there are variants associated with this product
         if self.varient_set.exists():
@@ -84,7 +95,7 @@ class Product(models.Model):
 
         # Set the calculated total price as the product price
         self.price = total_price
-    
+
         if not self.unique_id:
             current_time = timezone.now()
             microseconds = current_time.strftime('%f')
@@ -154,3 +165,44 @@ class OrderItem(models.Model):
     def __str__(self):
         return self.Order.user.username
     
+class Blog(models.Model):
+    STATUS = (
+        ('Publish', 'Publish'),
+        ('Draft', 'Draft'),
+    )
+    seo = models.OneToOneField(SEO, on_delete=models.CASCADE, null=True, blank=True)
+    title = models.CharField(max_length=200)
+    content = models.TextField()
+    created_date = models.DateTimeField(default=timezone.now)
+    categories = models.ManyToManyField('Categories')
+    tags = models.ManyToManyField('Tag')
+    images = models.ManyToManyField('Images', blank=True)
+    status = models.CharField(choices=STATUS, max_length=50)
+
+    def __str__(self):
+        return self.title
+    
+class Carousel(models.Model):
+    image = models.ImageField(upload_to='carousel_images/')
+    title = models.CharField(max_length=200)
+    subtitle = models.CharField(max_length=200)
+    page_link = models.CharField(max_length=200)  # URL for the call to action button
+    discount_percentage = models.PositiveIntegerField()
+
+    def __str__(self):
+        return self.title
+
+class Card(models.Model):
+    image = models.ImageField(upload_to='card_images/')
+    title = models.CharField(max_length=200)
+    discount_percentage = models.PositiveIntegerField()
+    call_to_action_link = models.CharField(max_length=200)  # URL for the call to action button
+
+class IndexPage(models.Model):
+    carousels = models.ManyToManyField('Carousel', related_name='index_page_carousels')
+    cards = models.ManyToManyField('Card', related_name='index_page_cards')
+    selected_products = models.ManyToManyField(Product, related_name='index_page_selected_products')
+    selected_blogs = models.ManyToManyField(Blog, related_name='index_page_selected_blogs')
+
+    def __str__(self):
+        return "Index Page"

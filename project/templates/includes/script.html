@@ -11,7 +11,7 @@
 <script src="/static/plugins/slick/slick/slick.min.js"></script>
 <!-- custom code-->
 <script src="/static/js/main.js"></script>
-{% comment %} 
+{% comment %}
 <script>
   var cartElement = document.getElementById("cart");
   console.log("working");
@@ -27,12 +27,21 @@
 
   function updateCart(cart) {
     for (var item in cart) {
-        document.getElementById('div' + item).innerHTML = "<button id='minus" + item + "' class='btn btn-primary minus'>-</button> <span id='val" + item + "''>" + cart[item] + "</span> <button id='plus" + item + "' class='btn btn-primary plus'> + </button>";
+      document.getElementById("div" + item).innerHTML =
+        "<button id='minus" +
+        item +
+        "' class='btn btn-primary minus'>-</button> <span id='val" +
+        item +
+        "''>" +
+        cart[item] +
+        "</span> <button id='plus" +
+        item +
+        "' class='btn btn-primary plus'> + </button>";
     }
-    localStorage.setItem('cart', JSON.stringify(cart));
-    document.getElementById('cart').innerHTML = Object.keys(cart).length;
+    localStorage.setItem("cart", JSON.stringify(cart));
+    document.getElementById("cart").innerHTML = Object.keys(cart).length;
     console.log(cart);
-}
+  }
   $(".cart").on("click", function (event) {
     event.preventDefault();
     console.log("clicked");
@@ -46,171 +55,311 @@
     updateCart(cart);
     console.log(cart);
     localStorage.setItem("cart", JSON.stringify(cart));
-    
   });
 
   // If plus or minus button is clicked, change the cart as well as the display value
-$('.divpr').on("click", "button.minus", function() {
-    a = this.id.slice(7, );
-    cart['pr' + a] = cart['pr' + a] - 1;
-    cart['pr' + a] = Math.max(0, cart['pr' + a]);
-    document.getElementById('valpr' + a).innerHTML = cart['pr' + a];
+  $(".divpr").on("click", "button.minus", function () {
+    a = this.id.slice(7);
+    cart["pr" + a] = cart["pr" + a] - 1;
+    cart["pr" + a] = Math.max(0, cart["pr" + a]);
+    document.getElementById("valpr" + a).innerHTML = cart["pr" + a];
     updateCart(cart);
-});
-$('.divpr').on("click", "button.plus", function() {
-    a = this.id.slice(6, );
-    cart['pr' + a] = cart['pr' + a] + 1;
-    document.getElementById('valpr' + a).innerHTML = cart['pr' + a];
+  });
+  $(".divpr").on("click", "button.plus", function () {
+    a = this.id.slice(6);
+    cart["pr" + a] = cart["pr" + a] + 1;
+    document.getElementById("valpr" + a).innerHTML = cart["pr" + a];
     updateCart(cart);
-});
-</script> {% endcomment %}
+  });
+</script>
+{% endcomment %}
 
 <script>
 
-  var csrfToken = $('input[name=csrfmiddlewaretoken]').val();
-  function calculateSubtotals() {
-      var totalSubtotal = 0;
-      
-      // Iterate through each item in the cart and calculate the subtotal
-      {% for key, value in request.session.cart.items %}
-      var price = {{ value.price }}; // Get the price from the server-side context
-      var quantity = {{ value.quantity }}; // Get the quantity from the server-side context
-      var subTotal = price * quantity;
-      
-      // Add current subtotal to the totalSubtotal variable
-      totalSubtotal += subTotal;
-      
-      // Update the corresponding sub-total element with the calculated subtotal value
-      $('.sub-total-{{ value.product_id }}').html("&#8377;" + subTotal);
-      {% endfor %}
-      
-      console.log(totalSubtotal);
-      // Update the total subtotal in the element with id 'subtotal'
-      $('.subtotal').html("Total: &#8377;" + totalSubtotal);
-      $('#total').html("Total: &#8377;" + totalSubtotal);
-  }
+    var csrfToken = $('input[name=csrfmiddlewaretoken]').val();
+    function calculateSubtotals() {
+        var totalSubtotal = 0;
 
-  
-  $(document).ready(function() {
-      // Call the function when the document is ready
-      calculateSubtotals();
-   $(".notification").fadeOut();
+        // Iterate through each item in the cart and calculate the subtotal
+        {% for key, value in request.session.cart.items %}
+        var price = {{ value.price }}; // Get the price from the server-side context
+        var quantity = {{ value.quantity }}; // Get the quantity from the server-side context
+        var subTotal = price * quantity;
 
-  });
-  
+        // Add current subtotal to the totalSubtotal variable
+        totalSubtotal += subTotal;
 
-  // Plus
-  $('.plus').on('click', function() {
-      var itemId = $(this).data('id');
+        // Update the corresponding sub-total element with the calculated subtotal value
+        $('.sub-total-{{ value.product_id }}').html("&#8377;" + subTotal);
+        {% endfor %}
+
+        console.log(totalSubtotal);
+        // Update the total subtotal in the element with id 'subtotal'
+        $('.subtotal').html("Total: &#8377;" + totalSubtotal);
+        $('#total').html("Total: &#8377;" + totalSubtotal);
+    }
+
+
+    $(document).ready(function() {
+        // Call the function when the document is ready
+        //calculateSubtotals();
+     $(".notification").fadeOut();
+     // Add event listener to the coupon input field
+     $('#discount-code').on('input', function()
+      {
+          // Capitalize letters in the input field
+          $(this).val($(this).val().toUpperCase());
+      });
+      $('#email').on('input', function(){
+          // Get the input value and trim any whitespace
+          var email = $(this).val().trim();
+          var isValid = validateEmail(email);
+
+          // Display error message and change border color if email is invalid or blank
+          if (!isValid || email === '') {
+              $('#error-message').text('Invalid email address');
+              $(this).css('border-color', 'red');
+          } else {
+              $('#error-message').text('');
+              $(this).css('border-color', ''); // Reset border color if email is valid
+          }
+      });
+
+      $('#phone').on('input', function(){
+          // Get the input value and trim any whitespace
+          var phoneNumber = $(this).val().trim();
+          var phoneNumber = $(this).val().replace(/\D/g, '');
+          // Remove leading '0' if present
+          if (phoneNumber.startsWith('0')) {
+              phoneNumber = phoneNumber.substr(1);
+          }
+          phoneNumber = phoneNumber.substring(0, 10);
+           // Validate phone number
+           var isValid = validatePhoneNumber(phoneNumber);
+
+           // Display error message and change border color if phone number is invalid or blank
+           if (!isValid || phoneNumber === '') {
+               $('#error-message').text('Invalid phone number');
+               $(this).css('border-color', 'red');
+           } else {
+               $('#error-message').text('');
+               $(this).css('border-color', ''); // Reset border color if phone number is valid
+           }
+
+
+           // Set the cleaned phone number back to the input field
+           $(this).val(phoneNumber);
+      });
+
+      function validatePhoneNumber(phoneNumber) {
+          // Regular expression for basic phone number validation
+          var phoneRegex = /^[1-9][0-9]{9}$/;
+          return phoneRegex.test(phoneNumber);
+      }
+
+      function validateEmail(email) {
+          // Regular expression for basic email validation
+          var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+          return emailRegex.test(email);
+      }
+
+
+      $('#fullname').on('input', function(){
+          // Get the input value
+          var input = $(this).val();
+
+          // Capitalize the first letter of each word
+          var words = input.split(' ');
+          for (var i = 0; i < words.length; i++) {
+              words[i] = words[i].charAt(0).toUpperCase() + words[i].slice(1);
+          }
+
+          // Set the formatted value back to the input field
+          $(this).val(words.join(' '));
+      });
+
+
+     $('#apply-coupon-button').click(function(){
+      var discountCode = $('#discount-code').val();
       $.ajax({
-          type: 'POST',
-          url: '/cart/item_increment/' + itemId + '/',
-          dataType: 'json',
+          url: '/apply-coupon/',
+          type: 'GET',
           data: {
-              csrfmiddlewaretoken: csrfToken  // Include the CSRF token in the data
+              discount_code: discountCode  // Pass the discount code as a parameter
           },
-          success: function(response) {
-              if (response.success) {
-
-                  // Update the displayed quantity on the page
-                  $('#quantity-' + itemId).val(response.new_quantity);
-                  $('.total-quantity').text(response.total_quantity);
-                  $('.subtotal').html("Total: &#8377;" + response.total_subtotal);
-                  $('#total').html("Total: &#8377;" + response.total_subtotal);
-                  
-                  
-
-              } else {
-                  // Handle error if needed
-                  console.log('Error occurred during incrementing item quantity.');
+          dataType: 'json',
+          success: function(data){
+              if(data.success){
+                  $('#coupon-msg').text(data.msg);
+                  $('#discount').text(data.discount);
+                  $('#subtotal').text(data.subtotal);
+                  $('#total').text(data.total);
               }
-          },
-          error: function(xhr, textStatus, error) {
-              // Handle AJAX error if needed
-              console.log('AJAX request failed: ' + error);
           }
       });
   });
+    });
 
-  // minus
-  $('.minus').on('click', function() {
-      var itemId = $(this).data('id');
-      $.ajax({
-          type: 'POST',
-          url: '/cart/item_decrement/' + itemId + '/',
-          dataType: 'json',
-          data: {
-              csrfmiddlewaretoken: csrfToken  // Include the CSRF token in the data
-          },
-          success: function(response) {
-              if (response.success) {
-                  // Update the displayed quantity on the page
-                  $('#quantity-' + itemId).val(response.new_quantity);
-                  $('.total-quantity').text(response.total_quantity);
-                  $('#sub-total-' + itemId).html("&#8377;" + response.sub_total);
-                  $('.subtotal').html("Total: &#8377;" + response.total_subtotal);             
-                  $('#total').html("Total: &#8377;" + response.total_subtotal);
-                  
-              } else {
-                  // Handle error if needed
-                  console.log('Error occurred during decreasing item quantity.');
-              }
-          },
-          error: function(xhr, textStatus, error) {
-              // Handle AJAX error if needed
-              console.log('AJAX request failed: ' + error);
-          }
-      });
-  });
 
-  $('.clear-all').on('click', function() {
-      $.ajax({
-          type: 'POST',
-          url: '/cart/cart_clear/',
-          dataType: 'json',
-          data: {
-              csrfmiddlewaretoken: csrfToken  // Include the CSRF token in the data
-          },
-          success: function(response) {
-              if (response.success) {
+    // Plus
+    $('.plus').on('click', function() {
+        var itemId = $(this).data('id');
+        $.ajax({
+            type: 'POST',
+            url: '/cart/item_increment/' + itemId + '/',
+            dataType: 'json',
+            data: {
+                csrfmiddlewaretoken: csrfToken  // Include the CSRF token in the data
+            },
+            success: function(response) {
+                if (response.success) {
 
-                  // Update the displayed quantity on the page
-                  $('#cart-body').remove();
-                  $('#total').html("Total: &#8377;" + 0)    ;
-                  $('.subtotal').html("Total: &#8377;" + 0);             
+                    // Update the displayed quantity on the page
+                    $('#quantity-' + itemId).val(response.new_quantity);
+                    $('.total-quantity').text(response.total_quantity);
+                    $('.subtotal').html("Total: &#8377;" + response.total_subtotal);
+                    $('#total').html("Total: &#8377;" + response.total_subtotal);
+                    updateCartItems(response.cart_items);
 
-              } else {
-                  // Handle error if needed
-                  console.log('Error occurred during incrementing item quantity.');
-              }
-          },
-          error: function(xhr, textStatus, error) {
-              // Handle AJAX error if needed
-              console.log('AJAX request failed: ' + error);
-          }
-      });
-  });
 
-  $('.clear-item').on('click', function(event) {
+                } else {
+                    // Handle error if needed
+                    console.log('Error occurred during incrementing item quantity.');
+                }
+            },
+            error: function(xhr, textStatus, error) {
+                // Handle AJAX error if needed
+                console.log('AJAX request failed: ' + error);
+            }
+        });
+    });
+
+    // minus
+    $('.minus').on('click', function() {
+        var itemId = $(this).data('id');
+        $.ajax({
+            type: 'POST',
+            url: '/cart/item_decrement/' + itemId + '/',
+            dataType: 'json',
+            data: {
+                csrfmiddlewaretoken: csrfToken  // Include the CSRF token in the data
+            },
+            success: function(response) {
+                if (response.success) {
+                    // Update the displayed quantity on the page
+                    $('#quantity-' + itemId).val(response.new_quantity);
+                    $('.total-quantity').text(response.total_quantity);
+                    $('#sub-total-' + itemId).html("&#8377;" + response.sub_total);
+                    $('.subtotal').html("Total: &#8377;" + response.total_subtotal);
+                    $('#total').html("Total: &#8377;" + response.total_subtotal);
+                    updateCartItems(response.cart_items);
+
+                } else {
+                    // Handle error if needed
+                    console.log('Error occurred during decreasing item quantity.');
+                }
+            },
+            error: function(xhr, textStatus, error) {
+                // Handle AJAX error if needed
+                console.log('AJAX request failed: ' + error);
+            }
+        });
+    });
+
+    $('.clear-all').on('click', function() {
+        $.ajax({
+            type: 'POST',
+            url: '/cart/cart_clear/',
+            dataType: 'json',
+            data: {
+                csrfmiddlewaretoken: csrfToken  // Include the CSRF token in the data
+            },
+            success: function(response) {
+                if (response.success) {
+
+                    // Update the displayed quantity on the page
+                    $('#cart-body').remove();
+                    $('#total').html("Total: &#8377;" + 0)    ;
+                    $('.subtotal').html("Total: &#8377;" + 0);
+                    location.reload(true); 
+                } else {
+                    // Handle error if needed
+                    console.log('Error occurred during incrementing item quantity.');
+                }
+            },
+            error: function(xhr, textStatus, error) {
+                // Handle AJAX error if needed
+                console.log('AJAX request failed: ' + error);
+            }
+        });
+    });
+
+    $(document).on('click', '.clear-item', function(event) {
+        event.preventDefault();
+        var itemId = $(this).data('id');
+        console.log(itemId)
+        $.ajax({
+            type: 'POST',
+            url: '/cart/item_clear/' + itemId + '/',
+            dataType: 'json',
+            data: {
+                csrfmiddlewaretoken: csrfToken  // Include the CSRF token in the data
+            },
+            success: function(response) {
+                if (response.success) {
+                    // Handle success, e.g., remove the item from the cart UI
+                    $('#cart-item-' + itemId).remove();
+                    $('.subtotal').html("Total: &#8377;" + response.total_subtotal);
+                    $('#total').html("Total: &#8377;" + response.total_subtotal);
+                    updateCartItems(response.cart_items);
+                } else {
+                    // Handle error if needed
+                    console.log('Error occurred while clearing item.');
+                }
+            },
+            error: function(xhr, textStatus, error) {
+                // Handle AJAX error if needed
+                console.log('AJAX request failed: ' + error);
+            }
+        });
+    });
+
+    $('.add-to-cart').on('click', function(event) {
       event.preventDefault();
-      var itemId = $(this).data('id');
-      console.log(itemId)
+      var id = $(this).data('id');
+      console.log(id);
+      if ($('.ps-product__feature-group').length > 0) {
+      var variant =$('.variant.active').data('value');}
+      else variant = null;
+      console.log(variant);
+      //var variant = getParameterByName('variant'); // Get the variant value from the URL
       $.ajax({
           type: 'POST',
-          url: '/cart/item_clear/' + itemId + '/',
+          url: '/cart/add/' + id + '/'+ variant + '/' ,
           dataType: 'json',
           data: {
+              variant: variant, // Include the variant value in the data
               csrfmiddlewaretoken: csrfToken  // Include the CSRF token in the data
           },
-          success: function(response) {                
+          success: function(response) {
               if (response.success) {
                   // Handle success, e.g., remove the item from the cart UI
-                  $('#cart-item-' + itemId).remove();
+                  $('.total-quantity').html(response.item);
                   $('.subtotal').html("Total: &#8377;" + response.total_subtotal);
-                  $('#total').html("Total: &#8377;" + response.total_subtotal);
+                  // Update cart items in the UI
+                console.log(response.cart_items);
+                 // Update cart items in the UI using the separate function
+                 updateCartItems(response.cart_items);
+                  // Show the notification
+                  $(".notification").fadeIn();
+
+                  // Hide the notification after 2 seconds
+                  setTimeout(function(){
+                      $(".notification").fadeOut();
+                  }, 1000); // 10000 milliseconds = 2 seconds
               } else {
                   // Handle error if needed
-                  console.log('Error occurred while clearing item.');
+                  console.log('Error occurred while adding item.');
               }
           },
           error: function(xhr, textStatus, error) {
@@ -220,165 +369,65 @@ $('.divpr').on("click", "button.plus", function() {
       });
   });
 
-  $('.add-to-cart').on('click', function(event) {
-    event.preventDefault();
-    var id = $(this).data('id');
-    console.log(id);
-    if ($('.ps-product__feature-group').length > 0) {
-    var variant =$('.variant.active').data('value');}
-    else variant = null;
-    console.log(variant);
-    //var variant = getParameterByName('variant'); // Get the variant value from the URL
-    $.ajax({
-        type: 'POST',
-        url: '/cart/add/' + id + '/'+ variant + '/' ,
-        dataType: 'json',
-        data: {
-            variant: variant, // Include the variant value in the data
-            csrfmiddlewaretoken: csrfToken  // Include the CSRF token in the data
-        },
-        success: function(response) {                
-            if (response.success) {
-                // Handle success, e.g., remove the item from the cart UI               
-                $('.total-quantity').html(response.item);
-                $('.subtotal').html("Total: &#8377;" + response.total_subtotal);   
-                
-                // Show the notification
-                $(".notification").fadeIn();
-                
-                // Hide the notification after 2 seconds
-                setTimeout(function(){
-                    $(".notification").fadeOut();
-                }, 1000); // 10000 milliseconds = 2 seconds
-            } else {
-                // Handle error if needed
-                console.log('Error occurred while adding item.');
-            }
-        },
-        error: function(xhr, textStatus, error) {
-            // Handle AJAX error if needed
-            console.log('AJAX request failed: ' + error);
-        }
-    });
-});
-{% comment %} 
-$('.proceed-to-checkout').on('click', function(event) {
-    event.preventDefault();
-    //var itemId = $(this).data('id');
-    var xhr = new XMLHttpRequest();
-        xhr.open('POST', '{% url "create_order" %}', true);
-        xhr.setRequestHeader('Content-Type', 'application/json');
-        xhr.onreadystatechange = function() {
-            if (xhr.readyState == 4) {
-                if (xhr.status == 200) {
-                    var response = JSON.parse(xhr.responseText);
-                    // Handle the API response here, for example, redirect to the provided URL
-                    window.location.href = response.redirect_url;
-                } else {
-                    // Handle error response
-                    console.error('Error creating order:', xhr.status);
-                }
-            }
-        };
-
-        // Prepare the JSON payload
-        var payload = {
-            "key": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
-            "client_txn_id": "0123456789",
-            "amount": "100",
-            "p_info": "Product Name",
-            "customer_name": "Jon Doe",
-            "customer_email": "jondoe@gmail.com",
-            "customer_mobile": "9876543210",
-            "redirect_url": "http://google.com",
-            "udf1": "user defined field 1",
-            "udf2": "user defined field 2",
-            "udf3": "user defined field 3"
-        };
-
-        // Send the request with the JSON payload
-        xhr.send(JSON.stringify(payload));
-}); {% endcomment %}
-{% comment %} 
-document.getElementById('checkoutButton').addEventListener('click', function() {
-    // Make AJAX request when the button is clicked
-    var xhr = new XMLHttpRequest();
-    xhr.open('POST', '{% url "create_order" %}', true);
-    xhr.setRequestHeader('Content-Type', 'application/json');
-    xhr.onreadystatechange = function() {
-        if (xhr.readyState == 4) {
-            if (xhr.status == 200) {
-                var response = JSON.parse(xhr.responseText);
-                // Handle the API response here, for example, redirect to the provided URL
-                window.location.href = response.redirect_url;
-            } else {
-                // Handle error response
-                console.error('Error creating order:', xhr.status);
-            }
-        }
-    };
-
-
-
-    // Prepare the JSON payload
-    var payload = {
-        "key": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
-        "client_txn_id": "0123456789",
-        "amount": "100",
-        "p_info": "Product Name",
-        "customer_name": "Jon Doe",
-        "customer_email": "jondoe@gmail.com",
-        "customer_mobile": "9876543210",
-        "redirect_url": "http://google.com",
-        "udf1": "user defined field 1",
-        "udf2": "user defined field 2",
-        "udf3": "user defined field 3"
-    };
-
-    // Send the request with the JSON payload
-    xhr.send(JSON.stringify(payload));
-}); {% endcomment %}
-
-
-
-$(document).ready(function() {
-    // Check if .ps-product__feature-group element exists
-    if ($('.ps-product__feature-group').length > 0) {
-        // Add 'active' class to the first .variant element
-        $('.variant:first').addClass('active');
-        $('.add-to-cart').attr('data-value', '2');
-        $('.minus').attr('data-value', '2');
-        $('.plus').attr('data-value', '2');
-    }
+  function updateCartItems(cartItems) {
+    var cartItemsHtml = '';
+    $('#cart-items').html('');
     
-   
-
-
-    $('.variant').on('click', function(event) {
-        event.preventDefault();        
-        var value = $(this).data('value');
-        var id = $(this).data('id');
-
-        
-        $('.add-to-cart').attr('data-value', `${value}`);
-        $('.add-to-cart').attr('data-id', `${id}`);
-        
-        console.log(value);
-
-        // Add your logic here for handling the click event
+    
+    $.each(cartItems, function(index, value) {
+        cartItemsHtml += '<li class="ps-cart__item">';
+        cartItemsHtml += '<div class="ps-product--mini-cart">';
+        cartItemsHtml += '<a class="ps-product__thumbnail" href="product-default.html"><img src="' + value.image + '" alt="alt"></a>';
+        cartItemsHtml += '<div class="ps-product__content">';
+        cartItemsHtml += '<a class="ps-product__name" href="product-default.html">' + value.name + '</a>';
+        cartItemsHtml += '<p class="ps-product__meta"> <span class="ps-product__price sub-total-' + value.product_id + '"></span> <span> x ' + value.quantity + '</span></p>';
+        cartItemsHtml += '</div><a class="ps-product__remove clear-item" data-id="' + value.product_id + '" ><i class="icon-cross"></i></a>';
+        cartItemsHtml += '</div></li>';
     });
-});
 
-function getParameterByName(name, url) {
-    if (!url) {
-        url = window.location.href;
-    }
-    name = name.replace(/[\[\]]/g, '\\$&');
-    var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
-        results = regex.exec(url);
-    if (!results) return null;
-    if (!results[2]) return '';
-    return decodeURIComponent(results[2].replace(/\+/g, ' '));
+    // Update cart items in the HTML template
+    $('#cart-items').html(cartItemsHtml);
 }
 
+  $(document).ready(function() {
+      // Check if .ps-product__feature-group element exists
+      if ($('.ps-product__feature-group').length > 0) {
+          // Add 'active' class to the first .variant element
+          $('.variant:first').addClass('active');
+          $('.add-to-cart').attr('data-value', '2');
+          $('.minus').attr('data-value', '2');
+          $('.plus').attr('data-value', '2');
+      }
+
+
+
+
+      $('.variant').on('click', function(event) {
+          event.preventDefault();
+          var value = $(this).data('value');
+          var id = $(this).data('id');
+          $('#price').html("&#8377;"+ $(this).data('price'));
+
+          $('.add-to-cart').attr('data-value', `${value}`);
+          $('.add-to-cart').attr('data-id', `${id}`);
+
+          console.log(value);
+
+          // Add your logic here for handling the click event
+      });
+  });
+
+  function getParameterByName(name, url) {
+      if (!url) {
+          url = window.location.href;
+      }
+      name = name.replace(/[\[\]]/g, '\\$&');
+      var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
+          results = regex.exec(url);
+      if (!results) return null;
+      if (!results[2]) return '';
+      return decodeURIComponent(results[2].replace(/\+/g, ' '));
+
+
+  }
 </script>

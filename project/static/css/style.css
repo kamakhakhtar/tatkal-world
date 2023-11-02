@@ -7553,7 +7553,7 @@ textarea.form-control {
   height: 44px;
   background-color: #f0f2f5;
   color: #5b6c8f;
-  border-color: #f0f2f5;
+  border-color: #171717;
 }
 
 .ps-shopping .ps-input::-moz-placeholder {
@@ -7778,7 +7778,7 @@ textarea.form-control {
 }
 
 .ps-search-table .form-control {
-  border-color: #f0f2f5;
+  /* border-color: #171717; */
   color: #5b6c8f;
   height: 46px;
   font-size: 18px;
@@ -10939,6 +10939,11 @@ textarea.form-control {
     font-size: 120px;
     line-height: 120px;
   }
+
+  .ps-page--notfound .ps-page__name-thankyou {
+    font-size: 80px;
+    line-height: 80px;
+  }
 }
 
 @media (min-width: 992px) {
@@ -10949,6 +10954,10 @@ textarea.form-control {
   .ps-page--notfound .ps-page__name {
     font-size: 150px;
     line-height: 150px;
+  }
+  .ps-page--notfound .ps-page__name-thankyou {
+    font-size: 100px;
+    line-height: 100px;
   }
 }
 

@@ -22,6 +22,7 @@ class OrderItemTublerinline(admin.TabularInline):
 class OrderAdmin(admin.ModelAdmin):
     inlines =[OrderItemTublerinline]
 
+
 admin.site.register(Images)
 admin.site.register(Tag)
 admin.site.register(ContactUs)
@@ -38,3 +39,6 @@ admin.site.register(OrderItem)
 admin.site.register(Varient)
 admin.site.register(Varient_Category)
 admin.site.register(Varient_test)
+admin.site.register(Blog)
+admin.site.register(SEO)
+admin.site.register(IndexPage)

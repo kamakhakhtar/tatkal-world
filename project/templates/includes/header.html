@@ -820,7 +820,7 @@
 {% comment %} {% for item in menu_items %}
         <li><a href="{{ item.url }}">{{ item.name }}</a></li>
     {% endfor %} {% endcomment %}
-
+{% load custom_filters%}    
 <header class="ps-header ps-header--3 ps-header--6">
     <div class="ps-noti">
         <div class="container">
@@ -840,26 +840,26 @@
                     {% endif %}
                     <li><a class="ps-header__item" href="#" id="cart-mini"><i class="icon-cart-empty"></i>
                         {% with cart_length=request.session.cart|length %}
-                        {% if cart_length > 0 %}
+                        {% if cart_length > 1 %}
                             <span class="badge total-quantity">{{ cart_length }}</span>
                         {% endif %}
                     {% endwith %}
                     </a>
                         <div class="ps-cart--mini">
-                            <ul class="ps-cart__items">
+                            <ul class="ps-cart__items" id="cart-items">
                                 {% for key,value in request.session.cart.items %}
                                 <li class="ps-cart__item">
-                                    <div class="ps-product--mini-cart"><a class="ps-product__thumbnail" href="product-default.html"><img src="{{value.image}}" alt="alt"></a>
-                                        <div class="ps-product__content"><a class="ps-product__name" href="product-default.html">{{value.name}}</a>
-                                            <p class="ps-product__meta"> <span class="ps-product__price sub-total-{{value.product_id}}"></span> <span> x 12</span></p>
-                                        </div><a class="ps-product__remove" href="javascript: void(0)"><i class="icon-cross"></i></a>
+                                    <div class="ps-product--mini-cart"><a class="ps-product__thumbnail" href="/product/{{value.product_id|product_slug}}"><img src="{{value.image}}" alt="alt"></a>
+                                        <div class="ps-product__content"><a class="ps-product__name" href="/product/{{value.product_id|product_slug}}">{{value.name}}</a>
+                                            <p class="ps-product__meta"> <span class="ps-product__price sub-total-{{value.product_id}}"></span> <span> x {{value.quantity}}</span></p>
+                                        </div><a class="ps-product__remove clear-item" data-id="{{value.product_id}}" ><i class="icon-cross"></i></a>
                                     </div>
                                 </li>
                               
                                 {% endfor %}
     
                             </ul>
-                            <div class="ps-cart__total"><span>Subtotal </span><span class="subtotal"></span></div>
+                            <div class="ps-cart__total"><span>Subtotal </span><span class="subtotal" id="subtotal">&#8377; {{subtotal}}</span></div>
                             <div class="ps-cart__footer"><a class="ps-btn ps-btn--outline" href="{% url 'cart_detail' %}">View Cart</a><a class="ps-btn ps-btn--warning" href="{% url 'checkout' %}">Checkout</a></div>
                         </div>
                     </li>
