@@ -23,10 +23,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-l)8+itij(_m!ria1nst$v-f#e$fj7ver_1t5^8w^c97r6^r-*b'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 ALLOWED_HOSTS = ['*','tatkalworld.com','tatkalsoftware.in','103.98.53.53']
 CSRF_TRUSTED_ORIGINS = ['https://tatkalworld.com', 'https://tatkalsoftware.in']
-PREPEND_WWW = True
+# PREPEND_WWW = False
 # Application definition
 
 INSTALLED_APPS = [

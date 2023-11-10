@@ -215,10 +215,11 @@
                 if (response.success) {
 
                     // Update the displayed quantity on the page
-                    $('#quantity-' + itemId).val(response.new_quantity);
+                    $('.itemQnty').val(response.new_quantity);
+                    
                     $('.total-quantity').text(response.total_quantity);
-                    $('.subtotal').html("Total: &#8377;" + response.total_subtotal);
-                    $('#total').html("Total: &#8377;" + response.total_subtotal);
+                    $('.subtotal').html("&#8377;" + response.total_subtotal);
+                    $('#total').html("&#8377;" + response.total_subtotal);
                     updateCartItems(response.cart_items);
 
 
@@ -247,11 +248,11 @@
             success: function(response) {
                 if (response.success) {
                     // Update the displayed quantity on the page
-                    $('#quantity-' + itemId).val(response.new_quantity);
+                    $('.itemQnty').val(response.new_quantity);
                     $('.total-quantity').text(response.total_quantity);
                     $('#sub-total-' + itemId).html("&#8377;" + response.sub_total);
-                    $('.subtotal').html("Total: &#8377;" + response.total_subtotal);
-                    $('#total').html("Total: &#8377;" + response.total_subtotal);
+                    $('.subtotal').html("&#8377;" + response.total_subtotal);
+                    $('#total').html("&#8377;" + response.total_subtotal);
                     updateCartItems(response.cart_items);
 
                 } else {
@@ -327,17 +328,19 @@
     $('.add-to-cart').on('click', function(event) {
       event.preventDefault();
       var id = $(this).data('id');
-      console.log(id);
+      
       if ($('.ps-product__feature-group').length > 0) {
       var variant =$('.variant.active').data('value');}
       else variant = null;
-      console.log(variant);
+      var quantity = $('.quantity').val();
+      
       //var variant = getParameterByName('variant'); // Get the variant value from the URL
       $.ajax({
           type: 'POST',
           url: '/cart/add/' + id + '/'+ variant + '/' ,
           dataType: 'json',
           data: {
+              quantity: quantity,
               variant: variant, // Include the variant value in the data
               csrfmiddlewaretoken: csrfToken  // Include the CSRF token in the data
           },
@@ -345,14 +348,15 @@
               if (response.success) {
                   // Handle success, e.g., remove the item from the cart UI
                   $('.total-quantity').html(response.item);
+                  
                   $('.subtotal').html("Total: &#8377;" + response.total_subtotal);
                   // Update cart items in the UI
-                console.log(response.cart_items);
+                
                  // Update cart items in the UI using the separate function
                  updateCartItems(response.cart_items);
                   // Show the notification
                   $(".notification").fadeIn();
-
+                
                   // Hide the notification after 2 seconds
                   setTimeout(function(){
                       $(".notification").fadeOut();
@@ -369,6 +373,49 @@
       });
   });
 
+  $('.addCombo').on('click', function(event) {
+    event.preventDefault();
+    var id = $(this).data('id');
+
+    
+    //var variant = getParameterByName('variant'); // Get the variant value from the URL
+    $.ajax({
+        type: 'POST',
+        url: '/cart/add-combo/',
+        dataType: 'json',
+        data: {
+            id: id,
+            csrfmiddlewaretoken: csrfToken  // Include the CSRF token in the data
+        },
+        success: function(response) {
+            if (response.success) {
+                // Handle success, e.g., remove the item from the cart UI
+                $('.total-quantity').html(response.item);
+                
+                $('.subtotal').html("Total: &#8377;" + response.total_subtotal);
+                // Update cart items in the UI
+              
+               // Update cart items in the UI using the separate function
+               updateCartItems(response.cart_items);
+                // Show the notification
+                $(".notification").fadeIn();
+              
+                // Hide the notification after 2 seconds
+                setTimeout(function(){
+                    $(".notification").fadeOut();
+                }, 1000); // 10000 milliseconds = 2 seconds
+            } else {
+                // Handle error if needed
+                console.log('Error occurred while adding item.');
+            }
+        },
+        error: function(xhr, textStatus, error) {
+            // Handle AJAX error if needed
+            console.log('AJAX request failed: ' + error);
+        }
+    });
+});
+
   function updateCartItems(cartItems) {
     var cartItemsHtml = '';
     $('#cart-items').html('');
@@ -380,11 +427,13 @@
         cartItemsHtml += '<a class="ps-product__thumbnail" href="product-default.html"><img src="' + value.image + '" alt="alt"></a>';
         cartItemsHtml += '<div class="ps-product__content">';
         cartItemsHtml += '<a class="ps-product__name" href="product-default.html">' + value.name + '</a>';
-        cartItemsHtml += '<p class="ps-product__meta"> <span class="ps-product__price sub-total-' + value.product_id + '"></span> <span> x ' + value.quantity + '</span></p>';
+        
+        cartItemsHtml += '<p class="ps-product__meta"> <span class="ps-product__price">&#8377;'+value.price+' x '+value.quantity+'</span> </p>';
         cartItemsHtml += '</div><a class="ps-product__remove clear-item" data-id="' + value.product_id + '" ><i class="icon-cross"></i></a>';
         cartItemsHtml += '</div></li>';
     });
 
+    
     // Update cart items in the HTML template
     $('#cart-items').html(cartItemsHtml);
 }

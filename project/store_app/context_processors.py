@@ -17,6 +17,7 @@ def menu_items(request):
 
     return {
         'grouped_menu': grouped_menu,
-        'subtotal': subtotal,
-            
+        'subtotal': subtotal,            
             }
+
+    

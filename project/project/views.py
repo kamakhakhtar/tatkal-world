@@ -3,7 +3,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from django.shortcuts import get_object_or_404
-from store_app.models import Product, Categories, Brand, ContactUs, Order, OrderItem, Varient
+from store_app.models import Product, Categories, Brand, ContactUs, Order, OrderItem, Varient,ComboOffer
 
 # cart
 from django.contrib.auth.decorators import login_required
@@ -93,7 +93,8 @@ def single_product(request, uid):
 #     product = Product.objects.filter(slug=uid).first()
      product = get_object_or_404(Product, slug=uid)
      products = Product.objects.filter(status='Publish').order_by('?')[:10]    
-
+     combo_products = product.combo_products.all()
+     
      seo_data = product.seo
      variant_price = 0
      if request.method == 'GET':    
@@ -116,10 +117,11 @@ def single_product(request, uid):
           'prod': product,
           'seo_data': seo_data,
           'total_price': total_price,
-          'product':products
+          'product':products,
+          'combo_products': combo_products,
      }
      print(seo_data)
-     return render(request, 'single-product.html', context)
+     return render(request, 'single-product1.html', context)
 
 
 def shopping_cart(request):
@@ -235,8 +237,17 @@ def terms_conditions(request):
 def blog_single(request):
      return render(request, 'blog-single.html')
 
+def profile(request):
+     uid = request.session.get('_auth_user_id')
+     user = User.objects.get(id=uid)
+     order = OrderItem.objects.filter(user=user)
+     print(order)
+
+     return render(request, 'user-profile.html')
+
 def blogs(request):
      return render(request, 'blogs.html')
+
 
 def thankyou(request):
      return render(request, 'thank-you.html')
@@ -246,10 +257,13 @@ def cart_add(request, id, variant):
     
      cart = Cart(request)     
      product = Product.objects.get(id=id)
-     print(product.slug)
+     qty = int(request.POST.get('quantity'))
+     print(variant)
      if variant != 'null':
-          id = id + "-"+ variant
-          p_name = f"{product.name} {variant} PNR"
+          parts = variant.split(' ')
+          id = id + "-"+ parts[0]
+          print(id)
+          p_name = f"{product.name} {variant}"
 
           print("id :" + id )
           print("variant :" + variant)
@@ -257,11 +271,14 @@ def cart_add(request, id, variant):
           variant = product.varient_set.filter(name__name=variant).first()
           if variant:
                # Update the product price with the variant price
+               print(variant.price, product.price)
                product.price = variant.price + product.price
                product.id = id
                product.name = p_name   
-                 
-     cart.add(product=product)
+
+     for i in range(qty):            
+          cart.add(product=product)
+
      items = len(cart.cart)
      total_subtotal = sum(int(item['quantity']) * int(item['price']) for item in cart.cart.values())
      
@@ -275,6 +292,8 @@ def cart_add(request, id, variant):
                'quantity': item_details['quantity'],
                'price': item_details['price'],  # Add the product price if needed
           })
+
+          
      return JsonResponse({
           'success': True,
           'item': items,
@@ -283,21 +302,51 @@ def cart_add(request, id, variant):
           'total_subtotal': total_subtotal,  # Include total_subtotal in the response
           })
 
+def cart_add_combo(request):
+     id = int(request.POST.get('id'))
+     cart = Cart(request)     
+     product = ComboOffer.objects.get(id=id)
+     print(id)
+     print(product)
+     cart.add(product=product)
+
+     items = len(cart.cart)
+     total_subtotal = sum(int(item['quantity']) * int(item['price']) for item in cart.cart.values())
+     
+     # Serialize cart items
+     cart_items = []
+     for item_id, item_details in cart.cart.items():
+          cart_items.append({
+               'product_id': item_id,
+               'name': item_details['name'],
+               'image': item_details['image'],  # Add other necessary fields
+               'quantity': item_details['quantity'],
+               'price': item_details['price'],  # Add the product price if needed
+          })
+
+          
+     return JsonResponse({
+          'success': True,
+          'item': items,
+          'cart_items': cart_items,  # Include serialized cart items
+          # 'variant': variant_name,
+          'total_subtotal': total_subtotal,  # Include total_subtotal in the response
+          })
 
 # @login_required(login_url="/login/")
 def item_clear(request, id):
-
      # Split the slug into parts based on '-'
      parts = id.split('-')
-     variant='null'
-     if len(parts) > 1:     
-          # Extract the first part
-          id = '-'.join(parts[:-1])
-          variant = parts[-1][-1]
+
+     # if len(parts) > 1:     
+     #      # Extract the first part
+     #      id = '-'.join(parts[:-1])
+     #      variant = parts[-1][-1]
      
-     product = Product.objects.get(id=id)
-     if variant != 'null':
-          product.id = id + "-"+ variant
+
+     product = Product.objects.get(id=parts[0])
+     if len(parts) > 1: 
+          product.id = id
 
      cart = Cart(request)
      cart.remove(product)
@@ -313,6 +362,7 @@ def item_clear(request, id):
                'price': item_details['price'],  # Add the product price if needed
           })
      #     return redirect("cart_detail")
+     print(cart_items)
      return JsonResponse({
           'success': True,
           'total_subtotal': total_subtotal,  # Include total_subtotal in the response
@@ -322,17 +372,12 @@ def item_clear(request, id):
 
 # @login_required(login_url="/login/")
 def item_increment(request, id):
-    
+     print(id)
      parts = id.split('-')
-     variant='null'
+       
+     product = Product.objects.get(id=parts[0])
      if len(parts) > 1:     
-          # Extract the first part
-          id = '-'.join(parts[:-1])
-          variant = parts[-1][-1]
-     
-     product = Product.objects.get(id=id)
-     if variant != 'null':
-          product.id = id + "-"+ variant
+          product.id = id 
 
      cart = Cart(request)
      
@@ -364,15 +409,10 @@ def item_increment(request, id):
 # @login_required(login_url="/login/")
 def item_decrement(request, id):
      parts = id.split('-')
-     variant='null'
+       
+     product = Product.objects.get(id=parts[0])
      if len(parts) > 1:     
-          # Extract the first part
-          id = '-'.join(parts[:-1])
-          variant = parts[-1][-1]
-     
-     product = Product.objects.get(id=id)
-     if variant != 'null':
-          product.id = id + "-"+ variant
+          product.id = id 
 
      cart = Cart(request)
      cart.decrement(product=product)
@@ -512,6 +552,7 @@ def place_order(request):
                     total = a*b
 
                     item = OrderItem (
+                         user= user,
                          Order= order,
                          product = cart[i]['name'],
                          image = cart[i]['image'],
@@ -530,9 +571,8 @@ def place_order(request):
                     "customer_email": email,
                     "customer_mobile": phone,
                     "redirect_url": redirect_url
-
                }
-
+               print(post_data)
                try:
                     response = requests.post(api_url, json=post_data)
 
@@ -673,3 +713,10 @@ def apply_coupon(request):
         'discount': discount,
     })
 
+def your_order(request):
+     uid = request.session.get('_auth_user_id')
+     user = User.objects.get(id=uid)
+     order = OrderItem.objects.filter(user=user)
+     print(order)
+
+     return render(request, 'user-profile.html')

@@ -53,7 +53,17 @@ class Varient_test(models.Model):
     
     def __str__(self):
         return self.name
-       
+
+class ComboOffer(models.Model):
+    name = models.CharField(max_length=200)
+    products = models.ManyToManyField('store_app.Product', related_name='combo_offer_as_primary', blank=True)
+    price = models.IntegerField()  # Manual price for the combo product
+    image = models.ImageField(upload_to="product_images/img", blank=True )
+    def __str__(self):
+        return self.name
+
+
+
 class Product(models.Model):
     CONDITION = (
         ('NEW', 'NEW'),
@@ -70,7 +80,7 @@ class Product(models.Model):
     )
     unique_id = models.CharField(unique=True, max_length=200, null=True, blank=True)
     seo = models.OneToOneField(SEO, on_delete=models.CASCADE, null=True, blank=True)
-    slug = models.SlugField(max_length=200, null=True)
+    slug = models.SlugField(max_length=200, unique=True, null=True)
     image = models.ImageField(upload_to="product_images/img")
     name = models.CharField(max_length=200)
     price = models.IntegerField()
@@ -78,6 +88,9 @@ class Product(models.Model):
     description = models.TextField()
     stock = models.CharField(choices=STOCK, max_length=50)
     status = models.CharField(choices=STATUS, max_length=50)
+    combo_products = models.ManyToManyField('store_app.ComboOffer', related_name='combo_offer_as_secondary', blank=True)
+    
+    
     created_date = models.DateTimeField(default=timezone.now)
 
     categories = models.ForeignKey(Categories, on_delete=models.CASCADE)
@@ -88,10 +101,10 @@ class Product(models.Model):
         total_price = 0  # Initialize total_price to 0
 
         # Check if there are variants associated with this product
-        if self.varient_set.exists():
-            # Get the first variant (you might want to handle multiple variants differently)
-            variant = self.varient_set.first()
-            total_price += variant.price
+        # if self.varient_set.exists():
+        #     # Get the first variant (you might want to handle multiple variants differently)
+        #     variant = self.varient_set.first()
+        #     total_price += variant.price
 
         # Set the calculated total price as the product price
         self.price = total_price
@@ -104,6 +117,7 @@ class Product(models.Model):
 
     def __str__(self):
         return self.name
+
 
               
 class Images(models.Model):
@@ -124,8 +138,7 @@ class Varient(models.Model):
     price = models.IntegerField()
     
     def __str__(self):
-        return self.product.name
-    
+        return self.product.name  
 
 
     
@@ -155,6 +168,7 @@ class Order(models.Model):
         return self.user.username
     
 class OrderItem(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
     Order = models.ForeignKey(Order, on_delete=models.CASCADE)
     product  = models.CharField(max_length=255)
     image = models.ImageField(upload_to="product_images/order_img")

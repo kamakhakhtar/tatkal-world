@@ -15,10 +15,25 @@ def capitalize_first_letter(value):
 
 @register.filter
 def product_slug(value):
-    if value:
+    value = str(value)  # Convert value to string
+
+    if "-" in value:
         parts = value.split("-")
         product = Product.objects.get(id=parts[0])
-        
         return product.slug
-    return value
+    else:
+        product = Product.objects.get(id=value)
+        return product.slug
+
+@register.filter
+def variant_price(id,price):
+    value = str(value)  # Convert value to string
+
+    if "-" in value:
+        parts = value.split("-")
+        product = Product.objects.get(id=parts[0])
+        return product.slug
+    else:
+        product = Product.objects.get(id=value)
+        return product.slug
 

@@ -1,0 +1,173 @@
+{% load cart_tag %}     
+{% load custom_filters%}    
+{% csrf_token %}
+<header class="ps-header ps-header--3 ps-header--6">
+    <div class="ps-noti">
+        <div class="container">
+            <p class="m-0">Best Deal <strong>FLAT 10% OFF </strong>on all products</p>
+        </div><a class="ps-noti__close"><i class="icon-cross"></i></a>
+    </div>
+    <div class="ps-header__middle">
+        <div class="container">
+            <div class="ps-logo"><a href="/"> <img src="/static/img/logo.png" alt><img class="sticky-logo" src="/static/img/sticky-logo.png" alt></a></div><a class="ps-menu--sticky" href="#"><i class="fa fa-bars"></i></a>
+            <div class="ps-header__right">
+                <ul class="ps-header__icons">
+                    
+                    {% if user.is_authenticated %}
+                    <li><a class="ps-header__item" href="{% url 'logout' %}" style="font-size:18px">Logout</a></li>
+                {% else %}
+                    <li><a class="ps-header__item" href="{% url 'login' %}" style="font-size:18px">Login</a></li>
+                {% endif %}
+                {% with cart_length=request.session.cart|length %}
+                <li><a class="ps-header__item" href="#" id="cart-mini"><i class="icon-cart-empty"></i>
+                    {% if cart_length >= 0 %}
+                        <span class="badge total-quantity">{{ cart_length }}</span>
+                    {% endif %}
+                </a>
+                {% endwith %}
+                    <div class="ps-cart--mini">
+                        <ul class="ps-cart__items" id="cart-items">
+                            
+                            {% for key,value in request.session.cart.items %}
+                            <li class="ps-cart__item">
+                                <div class="ps-product--mini-cart"><a class="ps-product__thumbnail" href="/product/{{value.product_id|product_slug}}"><img src="{{value.image}}" alt="alt"></a>
+                                    <div class="ps-product__content"><a class="ps-product__name" href="/product/{{value.product_id|product_slug}}">{{value.name}}</a>
+                                        <p class="ps-product__meta"> <span class="ps-product__price">&#8377;{{value.price}} x {{value.quantity}}</span> </p>
+                                    </div><a class="ps-product__remove clear-item" data-id="{{value.product_id}}" ><i class="icon-cross"></i></a>
+                                </div>
+                            </li>
+                          
+                            {% endfor %}
+
+                        </ul>
+                        <div class="ps-cart__total"><span>Subtotal </span><span class="subtotal" id="subtotal">&#8377; {{subtotal}}</span></div>
+                        <div class="ps-cart__footer"><a class="ps-btn ps-btn--outline" href="{% url 'cart_detail' %}">View Cart</a><a class="ps-btn ps-btn--warning" href="{% url 'checkout' %}">Checkout</a></div>
+                    </div>
+                </li>
+                </ul>
+                
+                
+                <div class="ps-header__menu">
+                    <ul class="menu">
+                        <li class="has-mega-menu"><a href="#"> <i class="fa fa-bars"></i>Products<span class="sub-toggle"><i class="fa fa-chevron-down"></i></span></a>
+                            <div class="mega-menu">
+                                <div class="container">
+                                    <div class="mega-menu__row">
+                                        {% for category, products in grouped_menu.items %}
+                                        {% if products %}
+                                            <div class="mega-menu__column">
+                                                <h4>{{ category.name }}</h4>
+                                                <ul class="sub-menu--mega">
+                                                    {% for product in products %}
+                                                        <li><a href="{{ product.slug }}">{{ product.name }}</a></li>
+                                                    {% endfor %}
+                                                </ul>
+                                            </div>  
+                                        {% endif %}
+                                        {% endfor %}
+                                       
+                                                                              
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="ps-header__search">
+                    <form action="/search/" method="get">
+                        <div class="ps-search-table">
+                            <div class="input-group">
+                                <input class="form-control ps-input" type="text" placeholder="Search for products" id="query" name="query">
+                                <div class="input-group-append"><a href="/search/"><i class="fa fa-search"></i></a></div>
+                            </div>
+                        </div>
+                    </form>
+                   
+                </div>
+            </div>
+        </div>
+        <div class="ps-header3-search-mobile">
+            <div class="container">
+                <div class="ps-search__content">
+                    <div class="ps-menu__sticky"><a class="menu-slide" href="#"><i class="fa fa-bars"></i>Products</a></div>
+                    <div class="ps-header__menu">
+                        <ul class="menu">
+                            <li class="has-mega-menu"><a href="#"> <i class="fa fa-bars"></i>Products<span class="sub-toggle"><i class="fa fa-chevron-down"></i></span></a>
+                                <div class="mega-menu">
+                                    <div class="container">
+                                        <div class="mega-menu__row">
+                                            {% for category, products in grouped_menu.items %}
+                                            {% if products %}
+                                                <div class="mega-menu__column">
+                                                    <h4>{{ category.name }}</h4>
+                                                    <ul class="sub-menu--mega">
+                                                        {% for product in products %}
+                                                            <li><a href="product/{{ product.slug }}">{{ product.name }}</a></li>
+                                                        {% endfor %}
+                                                    </ul>
+                                                </div>  
+                                            {% endif %}
+                                            {% endfor %}
+                                           
+                                                                                  
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="ps-header__search">
+                        <form action="/search/" method="get">
+                            <div class="ps-search-table">
+                                <div class="input-group">
+                                    <input class="form-control ps-input" type="text" placeholder="Search for products" id="query" name="query">
+                                    <div class="input-group-append"><a href="/search/"><i class="fa fa-search"></i></a></div>
+                                </div>
+                            </div>
+                        </form>
+                       
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+<header class="ps-header ps-header--6 ps-header--mobile">
+    <div class="ps-noti">
+        <div class="container">
+            <p class="m-0">Best Deal <strong>FLAT 10% OFF </strong>on all products</p>
+        </div><a class="ps-noti__close"><i class="icon-cross"></i></a>
+    </div>
+    <div class="ps-header__middle">
+        <div class="container">
+            <div class="ps-header__left">
+                <ul class="ps-header__icons">
+                    <li><a class="ps-header__item menu-slide" href="#"><i class="fa fa-bars"></i></a></li>
+                </ul>
+            </div>
+            <div class="ps-logo"><a href="/"> <img src="/static/img/mobile-logo.png" alt></a></div>
+            <div class="ps-header__right">
+                <ul class="ps-header__icons">
+                    {% with cart_length=request.session.cart|length %}
+                    
+                    <li><a class="ps-header__item" href="#"><i class="icon-cart-empty"></i>{% if cart_length > 0 %}<span class="badge">{{ cart_length }}</span>{% endif %}</a></li>
+                    
+                    {% endwith %}
+                </ul>
+            </div>
+        </div>
+        <div class="container">
+            <div class="ps-header__search">
+                <form action="/search/" method="get">
+                    <div class="ps-search-table">
+                        <div class="input-group">
+                            <input class="form-control ps-input" type="text" placeholder="Search for products" id="query" name="query">
+                            <div class="input-group-append"><a href="/search/"><i class="fa fa-search"></i></a></div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</header>

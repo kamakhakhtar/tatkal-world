@@ -1,0 +1,216 @@
+{% extends 'includes/base.html' %}
+{% block head %}
+<title>Tatkal World | Trusted Software Provider </title>
+<meta name="description" content="A powerful and conceptual webapplication for authenticate irctc mobile verification via otp.">
+
+{% endblock %}
+{% block content%}
+<div class="ps-page--product">
+    <div class="container">
+        <ul class="ps-breadcrumb">
+            <li class="ps-breadcrumb__item"><a href="/">Home</a></li>
+            <li class="ps-breadcrumb__item"><a href="/products/">Product</a></li>
+            <li class="ps-breadcrumb__item"><a href="#">{{prod.categories}}</a></li>
+            
+            <li class="ps-breadcrumb__item active" aria-current="page">{{prod.name}}</li>
+        </ul>
+        <div class="ps-page__content">
+            <div class="ps-product--detail">
+                <div class="row">
+                    <div class="col-12 col-md-9">
+                        <div class="row">
+                            <div class="col-12 col-xl-7">
+                                <img src="{{prod.image.url}}" alt="Product Image" />
+                            </div>
+                            <div class="col-12 col-xl-5">
+                                <div class="ps-product__info">
+                                    <div class="ps-product__branch"><a href="#">{{prod.condition}}</a></div>
+                                    <div class="ps-product__title"><a href="#">{{prod.name}}</a></div>
+                                    
+                                    <div class="ps-product__desc">
+                                        {{prod.description}}
+                                    </div>
+                                    <ul class="ps-product__bundle">
+                                        <li><i class="icon-wallet"></i>100% Money back</li>
+                                        <li><i class="icon-bag2"></i>Non-contact shipping</li>
+                                        <li><i class="icon-truck"></i>Free delivery for order over $200</li>
+                                    </ul>
+                                    <div class="ps-product__type">
+                                        <ul class="ps-product__list">
+                                            <li> <span class="ps-list__title">Tags: </span>
+                                                {% for tag in i.tag_set.all %}
+                                                <a class="ps-list__text" href="#">{{tag.name}}</a>
+                                                {% endfor %}
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <div class="ps-product__social">
+                                        <ul class="ps-social ps-social--color">
+                                            <li><a class="ps-social__link facebook" href="#"><i class="fa fa-facebook"> </i><span class="ps-tooltip">Facebook</span></a></li>
+                                            <li><a class="ps-social__link twitter" href="#"><i class="fa fa-twitter"></i><span class="ps-tooltip">Twitter</span></a></li>
+                                            <li><a class="ps-social__link pinterest" href="#"><i class="fa fa-pinterest-p"></i><span class="ps-tooltip">Pinterest</span></a></li>
+                                            <li class="ps-social__linkedin"><a class="ps-social__link linkedin" href="#"><i class="fa fa-linkedin"></i><span class="ps-tooltip">Linkedin</span></a></li>
+                                            <li class="ps-social__reddit"><a class="ps-social__link reddit-alien" href="#"><i class="fa fa-reddit-alien"></i><span class="ps-tooltip">Reddit Alien</span></a></li>
+                                            <li class="ps-social__email"><a class="ps-social__link envelope" href="#"><i class="fa fa-envelope-o"></i><span class="ps-tooltip">Email</span></a></li>
+                                            <li class="ps-social__whatsapp"><a class="ps-social__link whatsapp" href="#"><i class="fa fa-whatsapp"></i><span class="ps-tooltip">WhatsApp</span></a></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-3">
+                        <div class="ps-product__feature">
+                            <div class="ps-product__badge"><span class="ps-badge ps-badge--instock"> IN STOCK</span>
+                            </div>
+                            <div class="ps-product__meta">
+                         
+                            {% if prod.varient_set.exists %}
+                        <span class="ps-product__price sale" id="price">&#8377;{{ prod.varient_set.first.price }}</span>
+                        {% else %}
+                        <span class="ps-product__price sale" id="price">&#8377;{{ prod.price }}</span>
+                        {% endif %}
+                        </div>
+                        {% if prod.varient_set.all %}
+                        <div class="ps-product__feature-group">
+                            
+                            <div class="ps-product__group">
+                                <h6>Number PNR</h6>
+                                <div class="ps-product__size ps-select--feature"> 
+                                    {% for pnr in prod.varient_set.all %}
+                                    <a href="#" class="variant" data-value="{{pnr.name}}" data-id="{{prod.id}}" data-price="{{pnr.price}}" title="{{pnr.name}}">{{pnr.name}}</a>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                        {%endif%}
+                            <div class="ps-product__quantity">
+                                <h6>Quantity</h6>
+                                <div class="def-number-input number-input safari_only">
+                                    <button class="minus" data-slug="{{prod.slug}}"  onclick="this.parentNode.querySelector('input[type=number]').stepDown()"><i class="icon-minus"></i></button>
+                                    <input class="quantity" min="1" name="quantity" id="quantity" value="1" type="number" />
+                                    <button class="plus" data-slug="{{prod.slug}}" onclick="this.parentNode.querySelector('input[type=number]').stepUp()"><i class="icon-plus"></i></button>
+                                </div>
+                            </div><a class="ps-btn ps-btn--warning add-to-cart" data-id="{{prod.id}}">Add to cart</a>
+                            
+                        </div>
+                    </div>
+                </div>
+               
+            </div>
+        </div>
+        
+
+        {% if combo_products %}
+        {% for combo_product in combo_products %}
+        <section class="ps-bought ps-bought--vertical">
+            <h3 class="ps-bought__title">Frequently bought together</h3>
+            <div class="ps-bought__wapper">
+                <div class="ps-bought__thumbnail">
+                    
+                    <ul>
+                        {% for product in combo_product.products.all %}
+                        <li><a href="/product/{{product.slug}}"><img src="{{product.image.url}}" alt="{{product.name}}"></a></li>
+                        {% endfor %}
+                    </ul>
+                    
+                </div>
+                <div class="ps-bought__content">
+                    
+                    <ul class="ps-bought__list">
+                        {% for product in combo_product.products.all %}
+                        <li>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="product0" checked="checked">
+                                    
+                                    
+                                    {% if prod.varient_set.exists %}
+                                    <label class="form-check-label" for="product0"><span class="ps-bought__name">{{product.name}}  {{ prod.varient_set.first.name }}</span>– 
+                                    <span class="ps-bought__price sale">&#8377;{{ prod.varient_set.first.price }}</span>
+                                    {% else %}
+                                    <label class="form-check-label" for="product0"><span class="ps-bought__name">{{product.name}}</span>– 
+                                    <span class="ps-bought__price sale">&#8377;{{ prod.price }}</span>
+                                    {% endif %}
+                                    
+                                </label>
+                            </div>
+                        </li>
+                        {%endfor%}
+                    </ul>
+                    
+                    <div class="ps-bought__submit">
+                        <label>Buy selected for: </label>
+                        <div class="ps-bought__total ">&#8377;{{ combo_product.price }}</div><a class="ps-btn ps-btn--warning addCombo" data-id="{{combo_product.id}}" >Add combo to cart</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+        {%endfor%}
+        {% endif %}
+        <section class="ps-section--latest mt-100">
+            <div class="container">
+                <h3 class="ps-section__title">Latest products</h3>
+                <div class="ps-section__carousel">
+                    <div class="owl-carousel" data-owl-auto="false" data-owl-loop="true" data-owl-speed="13000" data-owl-gap="0" data-owl-nav="true" data-owl-dots="true" data-owl-item="5" data-owl-item-xs="2" data-owl-item-sm="2" data-owl-item-md="3" data-owl-item-lg="5" data-owl-item-xl="5" data-owl-duration="1000" data-owl-mousedrag="on">
+                        {% for prod in product %}
+                        <div class="ps-section__product">
+                            <div class="ps-product ps-product--standard">
+                                <div class="ps-product__thumbnail"><a class="ps-product__image" href="/product/{{prod.slug}}">
+                                        <figure><img src="{{prod.image.url}}" alt="alt" /><img src="{{prod.image.url}}" alt="alt" />
+                                        </figure>
+                                    </a>
+                                    <div class="ps-product__actions">
+                                        
+                                        
+                                        <div class="ps-product__item" data-toggle="tooltip" data-placement="left" title="Quick view"><a href="#" data-toggle="modal" data-target="#popupQuickview-{{forloop.counter}}"><i class="fa fa-search"></i></a></div>
+                                        {% comment %} <div class="ps-product__item" data-toggle="tooltip" data-placement="left" title="Add to cart"><a href="#" data-toggle="modal" data-target="#popupAddcart-{{forloop.counter}}"><i class="fa fa-shopping-basket"></i></a></div> {% endcomment %}
+                                    </div>
+                                    <div class="ps-product__badge">
+                                        <div class="ps-badge ps-badge--new">{{prod.condition}}</div>
+                                    </div>
+                                </div>
+                                <div class="ps-product__content">
+                                    <h5 class="ps-product__title" ><a href="/product/{{prod.slug}}">{{prod.name}}</a></h5>
+                                    <div class="ps-product__meta">
+                                        {% if prod.varient_set.exists %}
+                                        <span class="ps-product__price sale">&#8377;{{ prod.varient_set.first.price }}</span>
+                                        {% else %}
+                                        <span class="ps-product__price sale">&#8377;{{prod.price}}</span>
+                                        {%endif%}
+                                    </div>
+                                    
+                                    <div class="ps-product__desc">
+                                        <ul class="ps-product__list">
+                                            <li>Study history up to 30 days</li>
+                                            <li>Up to 5 users simultaneously</li>
+                                            <li>Has HEALTH certificate</li>
+                                        </ul>
+                                    </div>
+                                    <div class="ps-product__actions ps-product__group-mobile">
+                                        <div class="ps-product__quantity">
+                                            <div class="def-number-input number-input safari_only">
+                                                <button class="minus" onclick="this.parentNode.querySelector('input[type=number]').stepDown()"><i class="icon-minus"></i></button>
+                                                <input class="quantity" min="1" name="quantity" value="1" type="number">
+                                                <button class="plus" onclick="this.parentNode.querySelector('input[type=number]').stepUp()"><i class="icon-plus"></i></button>
+                                            </div>
+                                        </div>
+                                        <div class="ps-product__cart"> <a class="ps-btn ps-btn--warning" href="#">Add to cart</a></div>
+                                        <div class="ps-product__item cart" data-toggle="tooltip" data-placement="left" title="" data-original-title="Add to cart"><a href="#"><i class="fa fa-shopping-basket"></i></a></div>
+                                        <div class="ps-product__item" data-toggle="tooltip" data-placement="left" title="" data-original-title="Wishlist"><a href="wishlist.html"><i class="fa fa-heart-o"></i></a></div>
+                                        <div class="ps-product__item rotate" data-toggle="tooltip" data-placement="left" title="" data-original-title="Add to compare"><a href="compare.html"><i class="fa fa-align-left"></i></a></div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                        </div>
+                       {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+</div>
+{% endblock %}
+{% block contentScript %}
+{% comment %} my script here {% endcomment %}
+{% endblock%}

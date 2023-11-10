@@ -86,7 +86,7 @@
                             </thead>
                             <tbody id="cart-body">
                                 {% for key,value in request.session.cart.items %}
-                                <tr id="cart-item-{{value.product_id}}">
+                                <tr id="cart-item-{{value.product_id}}" >
                                     <td class="ps-product__remove"> <a data-id="{{value.product_id}}" class="clear-item" href="#"><i class="icon-cross"></i></a></td>
                                     <td class="ps-product__thumbnail"><a class="ps-product__image" href="/product/{{value.product_id|product_slug}}">
                                             <figure><img src=" {{value.image}} " alt=""></figure>
@@ -98,7 +98,7 @@
                                     <td class="ps-product__quantity">
                                         <div class="def-number-input number-input safari_only">
                                             <button class="minus" data-id="{{value.product_id}}"><i class="icon-minus"></i></button>
-                                            <input class="quantity" min="0" name="quantity" id="quantity-{{ value.product_id  }}"  value="{{value.quantity}}" type="number">
+                                            <input class="quantity itemQnty" min="0" name="quantity" id="quantity-{{ value.product_id  }}"  value="{{value.quantity}}" type="number">
                                             <button class="plus" data-id="{{value.product_id}}"><i class="icon-plus"></i></button>
                                         </div>
                                     </td>
@@ -160,7 +160,7 @@
                         </div>
                         <div class="ps-shopping__row">
                             <div class="ps-shopping__label">Total</div>
-                            <div class="ps-shopping__price" id="total"></div>
+                            <div class="ps-shopping__price" id="total">&#8377; {{total}}</div>
                         </div>
                         <div class="ps-shopping__checkout ">                       
                             

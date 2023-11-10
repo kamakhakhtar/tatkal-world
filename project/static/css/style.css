@@ -5421,7 +5421,7 @@ textarea.form-control {
 }
 
 .ps-banner--round .ps-banner__thumnail .ps-banner__image {
-  height: 345px;
+  height: 100%;
 }
 
 .ps-banner--round .ps-banner__thumnail .ps-banner__round {

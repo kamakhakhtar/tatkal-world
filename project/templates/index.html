@@ -107,7 +107,12 @@
                             </div>
                             <div class="ps-product__content">
                                 <h5 class="ps-product__title" ><a href="/product/{{prod.slug}}">{{prod.name}}</a></h5>
-                                <div class="ps-product__meta"><span class="ps-product__price sale">&#8377;{{prod.price}}</span>
+                                <div class="ps-product__meta">
+                                    {% if prod.varient_set.exists %}
+                                    <span class="ps-product__price sale">&#8377;{{ prod.varient_set.first.price }}</span>
+                                    {% else %}
+                                    <span class="ps-product__price sale">&#8377;{{prod.price}}</span>
+                                    {%endif%}
                                 </div>
                                 
                                 <div class="ps-product__desc">
@@ -208,7 +213,12 @@
                                 </div>
                                 <div class="ps-product__content">
                                     <h5 class="ps-product__title"><a href="/product/{{prod.slug}}">{{prod.name}}</a></h5>
-                                    <div class="ps-product__meta"><span class="ps-product__price">&#8377;{{prod.price}}</span>
+                                    <div class="ps-product__meta">
+                                    {% if prod.varient_set.exists %}
+                                    <span class="ps-product__price sale">&#8377;{{ prod.varient_set.first.price }}</span>
+                                    {% else %}
+                                    <span class="ps-product__price sale">&#8377;{{prod.price}}</span>
+                                    {%endif%}
                                     </div>
                                     
                                     <div class="ps-product__desc">

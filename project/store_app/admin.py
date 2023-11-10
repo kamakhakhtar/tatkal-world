@@ -27,7 +27,6 @@ admin.site.register(Images)
 admin.site.register(Tag)
 admin.site.register(ContactUs)
 
-
 admin.site.register(Categories)
 admin.site.register(Brand)
 admin.site.register(Filter_Price)
@@ -41,4 +40,5 @@ admin.site.register(Varient_Category)
 admin.site.register(Varient_test)
 admin.site.register(Blog)
 admin.site.register(SEO)
+admin.site.register(ComboOffer)
 admin.site.register(IndexPage)
