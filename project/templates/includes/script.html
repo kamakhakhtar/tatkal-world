@@ -11,68 +11,7 @@
 <script src="/static/plugins/slick/slick/slick.min.js"></script>
 <!-- custom code-->
 <script src="/static/js/main.js"></script>
-{% comment %}
-<script>
-  var cartElement = document.getElementById("cart");
-  console.log("working");
-  if (localStorage.getItem("cart") == null) {
-    var cart = {};
-    cartElement.style.display = "none";
-  } else {
-    cart = JSON.parse(localStorage.getItem("cart"));
-    cartElement.innerHTML = Object.keys(cart).length;
-    cartElement.style.display = "block";
-    updateCart(cart);
-  }
 
-  function updateCart(cart) {
-    for (var item in cart) {
-      document.getElementById("div" + item).innerHTML =
-        "<button id='minus" +
-        item +
-        "' class='btn btn-primary minus'>-</button> <span id='val" +
-        item +
-        "''>" +
-        cart[item] +
-        "</span> <button id='plus" +
-        item +
-        "' class='btn btn-primary plus'> + </button>";
-    }
-    localStorage.setItem("cart", JSON.stringify(cart));
-    document.getElementById("cart").innerHTML = Object.keys(cart).length;
-    console.log(cart);
-  }
-  $(".cart").on("click", function (event) {
-    event.preventDefault();
-    console.log("clicked");
-    var idstr = this.id.toString();
-    console.log(idstr);
-    if (cart[idstr] != undefined) {
-      cart[idstr] = cart[idstr] + 1;
-    } else {
-      cart[idstr] = 1;
-    }
-    updateCart(cart);
-    console.log(cart);
-    localStorage.setItem("cart", JSON.stringify(cart));
-  });
-
-  // If plus or minus button is clicked, change the cart as well as the display value
-  $(".divpr").on("click", "button.minus", function () {
-    a = this.id.slice(7);
-    cart["pr" + a] = cart["pr" + a] - 1;
-    cart["pr" + a] = Math.max(0, cart["pr" + a]);
-    document.getElementById("valpr" + a).innerHTML = cart["pr" + a];
-    updateCart(cart);
-  });
-  $(".divpr").on("click", "button.plus", function () {
-    a = this.id.slice(6);
-    cart["pr" + a] = cart["pr" + a] + 1;
-    document.getElementById("valpr" + a).innerHTML = cart["pr" + a];
-    updateCart(cart);
-  });
-</script>
-{% endcomment %}
 
 <script>
 
@@ -93,7 +32,7 @@
         $('.sub-total-{{ value.product_id }}').html("&#8377;" + subTotal);
         {% endfor %}
 
-        console.log(totalSubtotal);
+        
         // Update the total subtotal in the element with id 'subtotal'
         $('.subtotal').html("Total: &#8377;" + totalSubtotal);
         $('#total').html("Total: &#8377;" + totalSubtotal);
@@ -298,7 +237,6 @@
     $(document).on('click', '.clear-item', function(event) {
         event.preventDefault();
         var itemId = $(this).data('id');
-        console.log(itemId)
         $.ajax({
             type: 'POST',
             url: '/cart/item_clear/' + itemId + '/',
@@ -460,7 +398,7 @@
           $('.add-to-cart').attr('data-value', `${value}`);
           $('.add-to-cart').attr('data-id', `${id}`);
 
-          console.log(value);
+        
 
           // Add your logic here for handling the click event
       });

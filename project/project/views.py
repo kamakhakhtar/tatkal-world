@@ -258,20 +258,15 @@ def cart_add(request, id, variant):
      cart = Cart(request)     
      product = Product.objects.get(id=id)
      qty = int(request.POST.get('quantity'))
-     print(variant)
+     
      if variant != 'null':
           parts = variant.split(' ')
           id = id + "-"+ parts[0]
-          print(id)
-          p_name = f"{product.name} {variant}"
-
-          print("id :" + id )
-          print("variant :" + variant)
-          
+     
+          p_name = f"{product.name} {variant}"     
           variant = product.varient_set.filter(name__name=variant).first()
           if variant:
                # Update the product price with the variant price
-               print(variant.price, product.price)
                product.price = variant.price + product.price
                product.id = id
                product.name = p_name   
@@ -306,8 +301,6 @@ def cart_add_combo(request):
      id = int(request.POST.get('id'))
      cart = Cart(request)     
      product = ComboOffer.objects.get(id=id)
-     print(id)
-     print(product)
      cart.add(product=product)
 
      items = len(cart.cart)
@@ -362,7 +355,7 @@ def item_clear(request, id):
                'price': item_details['price'],  # Add the product price if needed
           })
      #     return redirect("cart_detail")
-     print(cart_items)
+     
      return JsonResponse({
           'success': True,
           'total_subtotal': total_subtotal,  # Include total_subtotal in the response
@@ -372,7 +365,7 @@ def item_clear(request, id):
 
 # @login_required(login_url="/login/")
 def item_increment(request, id):
-     print(id)
+     
      parts = id.split('-')
        
      product = Product.objects.get(id=parts[0])
@@ -461,7 +454,7 @@ def place_order(request):
      discount_code = request.session.get('discount_code')
      discount_percentage = request.session.get('discount_percentage', 0.0)  # Default to 0 if not found
      
-     print(discount_code, discount_percentage)
+     
      
      # Check if the discount code is valid and set the discount percentage accordingly
      if discount_code == 'BIG10':
@@ -565,14 +558,14 @@ def place_order(request):
                post_data = {
                     "key": "6fffda11-f596-4856-8a3c-69e5bb6641ea",
                     "client_txn_id": str(payment_id),
-                    "amount": "1",
+                    "amount": total,
                     "p_info": product_info,
                     "customer_name": fullname,
                     "customer_email": email,
                     "customer_mobile": phone,
                     "redirect_url": redirect_url
                }
-               print(post_data)
+               
                try:
                     response = requests.post(api_url, json=post_data)
 
@@ -704,7 +697,7 @@ def apply_coupon(request):
     # Store discount code and percentage in session
     request.session['discount_code'] = discount_code
     request.session['discount_percentage'] = discount_percentage
-    print(msg)
+    
     return JsonResponse({
         'success': True,
         'msg': msg,
@@ -717,6 +710,5 @@ def your_order(request):
      uid = request.session.get('_auth_user_id')
      user = User.objects.get(id=uid)
      order = OrderItem.objects.filter(user=user)
-     print(order)
 
      return render(request, 'user-profile.html')
