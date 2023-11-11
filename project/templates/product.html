@@ -57,7 +57,7 @@
                             {% for prod in product%}
                             <div class="col-6 col-lg-4 col-xl-3 p-0">
                                 <div class="ps-product ps-product--standard">
-                                    <div class="ps-product__thumbnail"><a class="ps-product__image" href="product1.html">
+                                    <div class="ps-product__thumbnail"><a class="ps-product__image" href="/product/{{prod.slug}}">
                                             <figure><img src="/{{prod.image}}" alt="alt">
                                             </figure>
                                         </a>
@@ -71,7 +71,7 @@
                                     </div>
                                     <div class="ps-product__content"><a class="ps-product__branch" href="#">&#8377;{{prod.categories}}</a>
                                         <h5 class="ps-product__title"><a href="product1.html">{{prod.name}}</a></h5>
-                                        <div class="ps-product__meta"><span class="ps-product__price sale">&#8377;{{prod.price}}</span><span class="ps-product__del">&#8377;{{prod.price}}</span>
+                                        <div class="ps-product__meta"><span class="ps-product__price sale">&#8377;{{prod.varient_set.first.price}}</span><span class="ps-product__del">&#8377;{{prod.price}}</span>
                                         </div>
                                       
                                         <div class="ps-product__desc">

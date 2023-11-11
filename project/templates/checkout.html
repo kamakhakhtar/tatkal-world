@@ -15,8 +15,8 @@
         <h3 class="ps-checkout__title"> Checkout</h3>
         <div class="ps-checkout__content">
             <div class="ps-checkout__wapper">
-                <p class="ps-checkout__text">Returning customer? <a href="my-account.html">Click here to login</a></p>
-                <p class="ps-checkout__text">Have a coupon? <a href="shopping-cart.html">Click here to enter your code</a></p>
+                <p class="ps-checkout__text">Returning customer? <a href="/login/">Click here to login</a></p>
+                <p class="ps-checkout__text">Have a coupon? <a href="#couponCode">Click here to enter your code</a></p>
             </div>
             <form action="{% url 'place_order' %}" method="post">
                 {% csrf_token %}
@@ -61,7 +61,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-12 col-lg-4">
+                    <div class="col-12 col-lg-4" id="couponCode">
                         <div class="ps-checkout__order">
                             <h3 class="ps-checkout__heading">Your order</h3>
                             <div class="ps-checkout__row">
@@ -97,7 +97,7 @@
                                 <div class="ps-product__price" id="total">&#8377;{{total}}</div>
                             </div>
                             
-                            <div class="ps-shopping__coupon">
+                            <div class="ps-shopping__coupon" >
                                 <p class="ps-blog__text mt-30" id="coupon-msg" style="font-size:12px
                                 ; color:green">{{code}}</p>
                                 <input class="form-control ps-input" id="discount-code" type="text" value="{{discount_code}}" placeholder="Coupon code">
