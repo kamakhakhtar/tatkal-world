@@ -27,7 +27,7 @@
                                    <li><a href="{% url 'about' %}">About us</a></li>
                                    <li><a href="{% url 'contact' %}">contact us</a></li>
                                    <li><a href="{% url 'privacypolicy'%}">Privacy Policy</a></li>
-                                   <li><a href="{% url 'terms' %}">Terms &amp; Conditions</a></li>
+                                   <li><a href="{% url 'terms' %}">Refund &amp; Return Policy</a></li>
                                </ul>
                            </div>
                        </div>
@@ -95,3 +95,82 @@
        </div>
    </div>
 </footer>
+<style>
+    
+
+    .floating-buttons {
+        position: fixed;
+        bottom: 60px;
+        right: 20px;
+        z-index: 1000;
+    }
+
+    .whatsapp-button, .call-button {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 60px;
+        height: 60px;
+        background-color: #e1e1e1; /* Change the color as needed */
+        color: white;
+        text-align: center;
+        line-height: 60px;
+        font-size: 18px;
+        border-radius: 50%;
+        margin-bottom: 10px;
+        text-decoration: none;
+        transition: background-color 0.3s;
+    }
+
+    .whatsapp-button:hover, .call-button:hover {
+        background-color: #191919; /* Change the hover color as needed */
+    }
+
+    .whatsapp-button img, .call-button img {
+        max-width: 100%;
+        max-height: 100%;
+    }
+    .floating-telegram-button {
+        position: fixed;
+        bottom: 60px;
+        left: 20px;
+        z-index: 1000;
+    }
+
+    .telegram-button {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 60px;
+        height: 60px;
+        background-color: #0088cc; /* Telegram blue color */
+        color: white;
+        text-align: center;
+        line-height: 60px;
+        font-size: 18px;
+        border-radius: 50%;
+        text-decoration: none;
+        transition: background-color 0.3s;
+    }
+
+    .telegram-button:hover {
+        background-color: #005580; /* Darker blue on hover */
+    }
+</style>
+<div class="floating-buttons">
+    <a href="https://wa.me/1234567890" class="whatsapp-button" target="_blank" title="Chat on WhatsApp">
+        <img src="/static/img/icon/whatsapp.png" alt="">
+    </a>
+    <a href="https://t.me/yourtelegram" class="call-button" title="Join us on Telegram">
+        <img src="/static/img/icon/telegram.png" alt="">
+    </a>
+    <a href="tel:+1234567890" class="call-button" title="Call Us">
+        <img src="/static/img/icon/call.png" alt="">
+    </a>
+</div>
+
+<div class="floating-telegram-button">
+    <a href="https://t.me/yourtelegramgroup" class="telegram-button" target="_blank" title="Join our Telegram group">
+        Join
+    </a>
+</div>

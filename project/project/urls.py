@@ -33,7 +33,7 @@ urlpatterns = [
     path('about-us/', views.about_us, name='about'),
     path('contact-us/', views.contact_us, name='contact'),
     path('privacy-policy/', views.privacy_policy, name='privacypolicy'),
-    path('terms-conditions/', views.terms_conditions, name='terms'),
+    path('refund-return-policy/', views.refundreturnpolicy, name='terms'),
     path('blog/', views.blogs, name='blog'),
     path('blog-single/', views.blog_single, name='blogSingle'),
 

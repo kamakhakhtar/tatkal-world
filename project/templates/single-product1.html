@@ -75,7 +75,7 @@
                         <div class="ps-product__feature-group">
                             
                             <div class="ps-product__group">
-                                <h6>Number PNR</h6>
+                                <h6>Choose Variant</h6>
                                 <div class="ps-product__size ps-select--feature"> 
                                     {% for pnr in prod.varient_set.all %}
                                     <a href="#" class="variant" data-value="{{pnr.name}}" data-id="{{prod.id}}" data-price="{{pnr.price}}" title="{{pnr.name}}">{{pnr.name}}</a>
