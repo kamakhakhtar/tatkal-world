@@ -6,8 +6,11 @@ django-ckeditor==6.7.0
 django-js-asset==2.1.0
 django-shopping-cart==0.1
 dnspython==2.4.2
+gunicorn==21.2.0
 idna==3.4
+packaging==23.2
 Pillow==10.0.1
+psycopg2-binary==2.9.9
 pymongo==4.5.0
 requests==2.31.0
 sqlparse==0.4.4
